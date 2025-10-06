@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Coding Practice Platform</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+
+  <!-- Ace Editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ext-language_tools.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body,
+    html {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .problem-panel {
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      background: var(--bs-dark);
+      border-right: 1px solid var(--bs-border-color);
+      position: relative;
+    }
+
+    .code-panel {
+      height: calc(100vh - 56px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #editor {
+      flex-grow: 1;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 14px;
+    }
+
+    .output-panel {
+      height: 200px;
+      background: var(--bs-dark);
+      border-top: 1px solid var(--bs-border-color);
+      overflow-y: auto;
+    }
+
+    .problem-content {
+      padding: 20px;
+    }
+
+    .controls-bar {
+      background: var(--bs-dark);
+      padding: 10px;
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .output-header button {
+      margin-left: 5px;
+    }
+
+    .bg-black {
+      background: #000 !important;
+      color: #0f0;
+    }
+
+    /* Reset button */
+    #resetQuestion {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    #resetQuestion:hover {
+      background: #0b5ed7;
+    }
+
+    /* Loading overlay */
+    #loadingOverlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      z-index: 100;
+    }
+
+    #loadingOverlay .spinner {
+      border: 6px solid #444;
+      border-top: 6px solid #0d6efd;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    h1 {
+      font-size: 30px;
+      font-weight: 250;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 550;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 550;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        <i class="fas fa-laptop-code me-2"></i>Fundamentals
+      </span>
+    </div>
+  </nav>
+
+  <div class="row g-0">
+    <!-- Problem Panel -->
+    <div class="col-6 problem-panel">
+      <div id="problemContent" class="problem-content"></div>
+      <div class="text-end px-3 pb-3">
+        <button id="resetQuestion">🔄 Reset Question</button>
+      </div>
+      <!-- Loading overlay -->
+      <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p class="mt-3">Fetching a new question... Please wait</p>
+      </div>
+    </div>
+
+    <!-- Code Editor Panel -->
+    <div class="col-6 code-panel">
+      <!-- Controls -->
+      <div class="controls-bar">
+        <div class="row align-items-center">
+          <div class="col-6">
+            <select class="form-select form-select-sm" id="languageSelect" style="width: auto;">
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+              <option value="c">C</option>
+              <option value="javascript">Javascript</option>
+            </select>
+          </div>
+          <div class="col-6 text-end">
+            <button class="btn btn-success btn-sm me-2" id="runCodeBtn">
+              <i class="fas fa-play me-1"></i>Run
+            </button>
+            <button class="btn btn-primary btn-sm" id="submitBtn">
+              <i class="fas fa-check me-1"></i>Submit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Editor -->
+      <div id="editor"># Write your solution here
+def solve():
+    # Your code goes here
+    pass
+
+# Test your solution
+if __name__ == "__main__":
+    result = solve()
+    print(result)</div>
+
+      <!-- Input/Output Panel -->
+      <div class="output-panel">
+        <div class="p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2 output-header">
+            <h6 class="mb-0" id="ioTitle">Output</h6>
+            <div>
+              <button class="btn btn-outline-primary btn-sm" id="inputModeBtn">Input</button>
+              <button class="btn btn-outline-secondary btn-sm" id="outputModeBtn">Output</button>
+              <button class="btn btn-outline-danger btn-sm" id="clearBtn">
+                <i class="fas fa-trash me-1"></i>Clear
+              </button>
+            </div>
+          </div>
+          <div id="ioContainer" class="bg-black p-2 rounded"
+            style="min-height: 150px; font-family: monospace; white-space: pre-wrap;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for failed cases -->
+  <div class="modal fade" id="resultModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header">
+          <h5 class="modal-title">Test Results</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="resultBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+
+    let editor, inputEditor;
+    let clearBtn = document.getElementById("clearBtn");
+    let languageSelect = document.getElementById("languageSelect");
+    let runCodeBtn = document.getElementById("runCodeBtn");
+    let submitBtn = document.getElementById("submitBtn");
+    let ioContainer = document.getElementById("ioContainer");
+    let ioTitle = document.getElementById("ioTitle");
+    let inputModeBtn = document.getElementById("inputModeBtn");
+    let outputModeBtn = document.getElementById("outputModeBtn");
+
+    let sampleTests = []; // will hold parsed tests from API
+
+    const languageTemplates = {
+      python:
+        `# Write your solution here
+def solve():
+    # Your code goes here
+    pass
+
+# Test your solution
+if __name__ == "__main__":
+    result = solve()
+    print(result)`,
+      java: `public class solution {
+    public static void main(String[] args) {
+        // Write your solution here
+        System.out.println("Hello World");
+    }
+}`,
+      cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your solution here
+    cout << "Hello World" << endl;
+    return 0;
+}`,
+      c: `#include <stdio.h>
+int main() {
+    // Write your solution here
+    printf("Hello World\\n");
+    return 0;
+}`,
+      javascript: `// Write your solution here
+function solve() {
+    // Your code goes here
+    return "Hello World";
+}
+// Test your solution
+console.log(solve());`
+    };
+
+    // Init editor
+    document.addEventListener('DOMContentLoaded', function () {
+      editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/python");
+      editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true, enableLiveAutocompletion: true, fontSize: 14, showPrintMargin: false, wrap: false });
+      activateOutputMode();
+    });
+
+    function changeLanguage() {
+      const language = languageSelect.value;
+      const modes = { python: 'python', java: 'java', cpp: 'c_cpp', c: 'c_cpp', javascript: 'javascript' };
+      editor.session.setMode(`ace/mode/${modes[language]}`);
+      editor.session.setValue(languageTemplates[language]);
+    }
+    languageSelect.addEventListener("change", changeLanguage);
+
+    function clearIO() {
+      if (ioTitle.textContent.startsWith("Input")) inputEditor.setValue("");
+      else ioContainer.textContent = "";
+    }
+    clearBtn.addEventListener("click", clearIO);
+
+    function activateInputMode() {
+      ioTitle.innerHTML = "Input <small>(Enter each input in a separate line)</small>";
+      ioContainer.innerHTML = "";
+      inputEditor = ace.edit(ioContainer);
+      inputEditor.setTheme("ace/theme/monokai");
+      inputEditor.session.setMode("ace/mode/text");
+      inputEditor.setOptions({ fontSize: 14, showPrintMargin: false, wrap: true });
+    }
+    function activateOutputMode() {
+      ioTitle.textContent = "Output";
+      if (inputEditor) { inputEditor.destroy(); inputEditor = null; }
+      ioContainer.innerHTML = "";
+    }
+    inputModeBtn.addEventListener("click", activateInputMode);
+    outputModeBtn.addEventListener("click", activateOutputMode);
+
+    // Run Code
+    async function runCode(stdinInput = "") {
+      const code = editor.getValue();
+      const language = languageSelect.value;
+      activateOutputMode();
+      ioContainer.textContent = "Running...";
+      try {
+        const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ language, version: "*", files: [{ name: "code", content: code }], stdin: stdinInput, args: [] })
+        });
+        const result = await res.json();
+        let output = (result.run?.stdout || "") + (result.run?.stderr || "");
+        const regex = /"\/piston\/jobs\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/code"/g;
+        output = output.replace(regex, 'issue');
+        ioContainer.textContent = output.trim() || "[No output]";
+        return output.trim();
+      } catch (err) {
+        ioContainer.textContent = "Error: " + err.message;
+        return "";
+      }
+    }
+
+    // ✅ FIX: Run button now checks for custom input
+    runCodeBtn.addEventListener("click", () => {
+      let customInput = "";
+      if (inputEditor) {
+        customInput = inputEditor.getValue().trim();
+      }
+      runCode(customInput);
+    });
+
+    // Submit Code (test all samples)
+    async function submitCode() {
+      if (!sampleTests.length) {
+        alert("No sample tests available!");
+        return;
+      }
+      let allPassed = true;
+      let results = "";
+      let passed = 0, failed = 0;
+
+      for (let i = 0; i < sampleTests.length; i++) {
+        let test = sampleTests[i];
+        let output = await runCode(test.input);
+        if (output === test.expected) {
+          results += `<p class="text-success">✅ Test ${i + 1} Passed</p>`;
+          passed++;
+        } else {
+          results += `<p class="text-danger">❌ Test ${i + 1} Failed<br><b>Input:</b> ${test.input}<br><b>Expected:</b> ${test.expected}<br><b>Got:</b> ${output}</p>`;
+          allPassed = false; failed++;
+        }
+      }
+
+      if (allPassed) {
+        confetti();
+        ioContainer.textContent = "🎉 All tests passed!";
+      } else {
+        document.getElementById("resultBody").innerHTML = results;
+        new bootstrap.Modal(document.getElementById("resultModal")).show();
+      }
+    }
+    submitBtn.addEventListener("click", submitCode);
+
+    // ---------------- PROBLEM FETCH LOGIC ----------------
+    let dataString = localStorage.getItem('questionDetails');
+    let storedObject = dataString ? JSON.parse(dataString) : null;
+
+    async function getQuestionFromChatGPT() {
+      if (!storedObject) return;
+      const { title, type, difficulty } = storedObject;
+      const overlay = document.getElementById("loadingOverlay");
+      const content = document.getElementById("problemContent");
+      overlay.style.display = "flex"; content.innerHTML = "";
+
+      const prompt = `
+      Generate a structured competitive programming problem for practice it should be independent on any programming language .
+
+      Problem Title: ${title}
+      Problem Type: ${type}
+      Difficulty Level: ${difficulty}
+
+      Please include:
+      1. Problem statement
+      2. Input format
+      3. Output format
+      4. Constraints
+      5. 3 Sample Input/Output examples
+      6. Explanation for each example
+      7. Edge case(s) if applicable
+      `;
+
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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",
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "Placement Coding Practice Platform"
+          },
+          body: JSON.stringify({
+            model: "openai/gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }]
+          })
+        });
+
+        const data = await response.json();
+        const rawText = data.choices?.[0]?.message?.content || "No response";
+
+        // Extract Sample Tests from response
+        sampleTests = [];
+        console.log(rawText);
+
+        const regex = /[#\*]*\s*Input[:\*]*\s*```([\s\S]*?)```[\s\S]*?[#\*]*\s*Output[:\*]*\s*```([\s\S]*?)```/gi;
+
+        let match;
+        while ((match = regex.exec(rawText)) !== null) {
+          sampleTests.push({
+            input: match[1].trim(),
+            expected: match[2].trim()
+          });
+        }
+
+        console.log("Extracted sampleTests:", sampleTests);
+
+        // Markdown formatting
+        let formattedHTML = rawText
+          .replace(/^### (.*)$/gim, "<h3>$1</h3>")
+          .replace(/^## (.*)$/gim, "<h2>$1</h2>")
+          .replace(/^# (.*)$/gim, "<h1>$1</h1>")
+          .replace(/\*\*(.*?)\*\*/gim, "<b>$1</b>")
+          .replace(/```([^`]*)```/gim, "<pre><code>$1</code></pre>")
+          .replace(/`([^`]*)`/gim, "<code>$1</code>")
+          .replace(/\n\n+/g, "</p><p>")
+          .replace(/\n/g, " ");
+        content.innerHTML = "<p>" + formattedHTML + "</p>";
+
+      } catch (err) {
+        content.textContent = "Error: " + err.message;
+      } finally {
+        overlay.style.display = "none";
+      }
+    }
+    document.getElementById("resetQuestion").addEventListener("click", getQuestionFromChatGPT);
+    document.addEventListener("DOMContentLoaded", getQuestionFromChatGPT);
+
+
+  </script>
+</body>
+
+</html>

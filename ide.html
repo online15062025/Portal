@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Coding Practice Platform</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+
+  <!-- Ace Editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ext-language_tools.js"></script>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body, html { height: 100vh; overflow: hidden; }
+    .code-panel { height: calc(100vh - 56px); display: flex; flex-direction: column; }
+    #editor { flex-grow: 1; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 14px; }
+    .output-panel { height: 200px; background: var(--bs-dark); border-top: 1px solid var(--bs-border-color); overflow-y: auto; }
+    .controls-bar { background: var(--bs-dark); padding: 10px; border-bottom: 1px solid var(--bs-border-color); }
+    .output-header button { margin-left: 5px; }
+    .bg-black { background: #000 !important; color: #0f0; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">
+        <i class="fas fa-laptop-code me-2"></i>Fundamentals
+      </span>
+    </div>
+  </nav>
+
+  <div class="row g-0">
+    <!-- Code Editor Panel (Full Width Now) -->
+    <div class="col-12 code-panel">
+      <!-- Controls -->
+      <div class="controls-bar">
+        <div class="row align-items-center">
+          <div class="col-6">
+            <select class="form-select form-select-sm" id="languageSelect" style="width: auto;">
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+              <option value="c">C</option>
+              <option value="javascript">Javascript</option>
+            </select>
+          </div>
+          <div class="col-6 text-end">
+            <button class="btn btn-success btn-sm me-2" id="runCodeBtn">
+              <i class="fas fa-play me-1"></i>Run
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Editor -->
+      <div id="editor"># Write your solution here
+def solve():
+    # Your code goes here
+    pass
+
+# Test your solution
+if __name__ == "__main__":
+    result = solve()
+    print(result)</div>
+
+      <!-- Input/Output Panel -->
+      <div class="output-panel">
+        <div class="p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2 output-header">
+            <h6 class="mb-0" id="ioTitle">Output</h6>
+            <div>
+              <button class="btn btn-outline-primary btn-sm" id="inputModeBtn">Input</button>
+              <button class="btn btn-outline-secondary btn-sm" id="outputModeBtn">Output</button>
+              <button class="btn btn-outline-danger btn-sm" id="clearBtn">
+                <i class="fas fa-trash me-1"></i>Clear
+              </button>
+            </div>
+          </div>
+          <!-- Input/Output container -->
+          <div id="ioContainer" class="bg-black p-2 rounded" style="min-height: 150px; font-family: monospace; white-space: pre-wrap;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gemini (for future use) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Main Script -->
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+    const API_KEY = "AIzaSyBEWbGKJ5tOFjTdfbZ8wRMz1G5DyLV5U9E";
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    let editor, inputEditor;
+    const clearBtn = document.getElementById("clearBtn");
+    const languageSelect = document.getElementById("languageSelect");
+    const runCodeBtn = document.getElementById("runCodeBtn");
+    const ioContainer = document.getElementById("ioContainer");
+    const ioTitle = document.getElementById("ioTitle");
+    const inputModeBtn = document.getElementById("inputModeBtn");
+    const outputModeBtn = document.getElementById("outputModeBtn");
+
+    const languageTemplates = {
+      python: `# Write your solution here
+def solve():
+    # Your code goes here
+    pass
+
+# Test your solution
+if __name__ == "__main__":
+    result = solve()
+    print(result)`,
+      java: `public class solution {
+    public static void main(String[] args) {
+        // Write your solution here
+        System.out.println("Hello World");
+    }
+}`,
+      cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your solution here
+    cout << "Hello World" << endl;
+    return 0;
+}`,
+      c: `#include <stdio.h>
+int main() {
+    // Write your solution here
+    printf("Hello World\\n");
+    return 0;
+}`,
+      javascript: `// Write your solution here
+function solve() {
+    // Your code goes here
+    return "Hello World";
+}
+// Test your solution
+console.log(solve());`
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/python");
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true,
+        fontSize: 14,
+        showPrintMargin: false,
+        wrap: false
+      });
+
+      activateOutputMode(); // default mode
+    });
+
+    function changeLanguage() {
+      const language = languageSelect.value;
+      const modes = {
+        python: 'python',
+        java: 'java',
+        cpp: 'c_cpp',
+        c: 'c_cpp',
+        javascript: 'javascript'
+      };
+      editor.session.setMode(`ace/mode/${modes[language]}`);
+      editor.session.setValue(languageTemplates[language]);
+    }
+
+    function clearIO() {
+      if (ioTitle.textContent.includes("Input")) {
+        if (inputEditor) inputEditor.setValue("");
+      } else {
+        ioContainer.textContent = "";
+      }
+    }
+
+    async function runCode() {
+      const code = editor.getValue();
+      const language = languageSelect.value;
+
+      let stdinInput = "";
+      if (ioTitle.textContent.includes("Input") && inputEditor) {
+        stdinInput = inputEditor.getValue();
+      }
+
+      activateOutputMode(); // switch to output mode before showing results
+      ioContainer.textContent = "Running...";
+
+      try {
+        const res = await fetch("https://emkc.org/api/v2/piston/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            language: language,
+            version: "*",
+            files: [{ name: "code", content: code }],
+            stdin: stdinInput,
+            args: [],
+            compile_timeout: 10000,
+            run_timeout: 3000
+          })
+        });
+
+        const result = await res.json();
+        const stdout = result.run?.stdout || "";
+        const stderr = result.run?.stderr || "";
+        const output = `${stdout}${stderr}`.trim();
+        ioContainer.textContent = output || "[No output]";
+      } catch (err) {
+        ioContainer.textContent = "Error: " + err.message;
+      }
+    }
+
+    function activateInputMode() {
+      ioTitle.innerHTML = "Input <small>(Enter each input in a separate line)</small>";
+      ioContainer.innerHTML = "";
+      inputEditor = ace.edit(ioContainer);
+      inputEditor.setTheme("ace/theme/monokai");
+      inputEditor.session.setMode("ace/mode/text");
+      inputEditor.setOptions({ fontSize: 14, showPrintMargin: false, wrap: true });
+    }
+
+    function activateOutputMode() {
+      ioTitle.textContent = "Output";
+      if (inputEditor) {
+        inputEditor.destroy();
+        inputEditor = null;
+      }
+      ioContainer.innerHTML = "";
+    }
+
+    clearBtn.addEventListener("click", clearIO);
+    languageSelect.addEventListener("change", changeLanguage);
+    runCodeBtn.addEventListener("click", runCode);
+    inputModeBtn.addEventListener("click", activateInputMode);
+    outputModeBtn.addEventListener("click", activateOutputMode);
+  </script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Home</title>
+    <style>
+        /* Basic card styling (in case not in dashboard.css) */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1c1b2d;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 250px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+            color: #fff;
+        }
+
+        .card-body h3 {
+            margin: 0 0 10px;
+        }
+
+        .card-body p {
+
+
+            font-family: 'Nunito';
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+            letter-spacing: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #a5a5a5;
+        }
+
+        .card-body button {
+            background: #0f0e1b;
+            color: #fff;
+            border-style: solid;
+            border-width: 0.15px;
+            border-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .card button :hover {
+            background: #fff;
+            color: #0f0e1b;
+            border-style: solid;
+            border-width: 0.15px;
+            border-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+
+
+        .card-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 50;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            border-radius: 8px 8px 0 0;
+            filter: brightness(1.1) saturate(1.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card-image:hover {
+            transform: scale(1.05);
+        }
+
+        .card-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            font-weight: 700;
+            padding: 10px;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            border-radius: 8px 8px 0 0;
+            filter: brightness(1.05) saturate(1.3);
+            transition: transform 0.3s ease;
+            word-break: break-word;
+        }
+
+        .card-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <div class="logo_name">Fundamentals</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a href="#quantitativeAptitude">
+                    <i class='bx bx-calculator'></i>
+                    <span class="links_name">Quantative Aptitude</span>
+                </a>
+                <span class="tooltip">Quantative Aptitude</span>
+            </li>
+
+            <li>
+                <a href="#logicalReasoning">
+                    <i class='bx bx-brain'></i>
+                    <span class="links_name">Logical Reasoning</span>
+                </a>
+                <span class="tooltip">Logical Reasoning</span>
+            </li>
+
+            <li>
+                <a href="#verbalReasoning">
+                    <i class='bx bx-chat'></i>
+                    <span class="links_name">Verbal Reasoning</span>
+                </a>
+                <span class="tooltip">Verbal Reasoning</span>
+            </li>
+
+            <li>
+                <a href="#programmingBasics">
+                    <i class='bx bx-code-alt'></i>
+                    <span class="links_name">Programming</span>
+                </a>
+                <span class="tooltip">Programming</span>
+            </li>
+            <li>
+                <a href="ide.html">
+                    <i class='bx bx-terminal'></i>
+                    <span class="links_name">IDE</span>
+                </a>
+                <span class="tooltip">IDE</span>
+            </li>
+            <li>
+                <a href="mocktest.html">
+                    <i class='bx bx-edit-alt'></i>
+                    <span class="links_name">Mocktest</span>
+                </a>
+                <span class="tooltip">Mocktest</span>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bx-star'></i>
+                    <span class="links_name">AI(Coming Soon)</span>
+                </a>
+                <span class="tooltip">AI(Coming Soon)</span>
+            </li>
+
+            <li class="profile">
+                <div class="profile-details">
+                    <i class='bx bx-export'></i>
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search cards...">
+                <!-- Inline SVG search icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M21.71 20.29l-3.388-3.388A8.935 8.935 0 0019 11a9 9 0 10-9 9c2.12 0 4.07-.74 5.902-1.678l3.388 3.388a1 1 0 001.42-1.42zM11 17a6 6 0 110-12 6 6 0 010 12z" />
+                </svg>
+            </div>
+            <div class="modeBtn">
+                <button class="button-85" role="button">AI Mode</button> &nbsp;&nbsp;&nbsp;
+                <!-- <button class="button-13" role="button">Classical Mode</button> -->
+            </div>
+        </div>
+        <div class="section-header">
+            <h1>Quantitative Aptitude</h1>
+            <span>Based R.S Agarwal Latest Edition</span>
+        </div>
+
+        <div class="card-container" id="quantitativeAptitude"></div>
+        <div class="section-header">
+            <h1>Verbal Reasoning</h1>
+            <span>Based on R.S Agarwal Latest Edition</span>
+        </div>
+
+        <div class="card-container" id="verbalReasoning"></div>
+        <div class="section-header">
+            <h1>Logical Reasoning</h1>
+            <span>Based on R.S Agarwal Latest Edition</span>
+        </div>
+
+        <div class="card-container" id="logicalReasoning"></div>
+        <!-- Basics -->
+        <div class="section-header">
+            <h1>Basics</h1>
+            <span>Fundamentals of Programming</span>
+        </div>
+        <div class="card-container" id="programmingBasics"></div>
+
+        <!-- Data Structures -->
+        <div class="section-header">
+            <h1>Data Structures</h1>
+            <span>Core DS Concepts</span>
+        </div>
+        <div class="card-container" id="dataStructures"></div>
+
+        <!-- Algorithms -->
+        <div class="section-header">
+            <h1>Algorithms</h1>
+            <span>Problem-Solving Patterns</span>
+        </div>
+        <div class="card-container" id="algorithms"></div>
+
+        <!-- Advanced -->
+        <div class="section-header">
+            <h1>Advanced Topics</h1>
+            <span>System Design & Competitive Programming</span>
+        </div>
+        <div class="card-container" id="advancedProgramming"></div>
+
+    </section>
+
+    <script type="module">
+        let sidebar = document.querySelector(".sidebar");
+        let closeBtn = document.querySelector("#btn");
+        let searchBtn = document.querySelector(".bx-search");
+
+        closeBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();
+        });
+
+        function menuBtnChange() {
+            if (sidebar.classList.contains("open")) {
+                closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+            } else {
+                closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+        }
+
+        function sanitizeFilename(title) {
+            return title.replace(/ /g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+        }
+
+
+        const QuantitativeAptitude = [
+            // Quantitative Aptitude
+            { id: 1, img: "https://picsum.photos/300/200?random=1", title: "Number System", label: "Quantitative Aptitude", desc: "Learn about numbers, digits, and their properties.", btnText: "Start" },
+            { id: 2, img: "https://picsum.photos/300/200?random=2", title: "HCF & LCM", label: "Quantitative Aptitude", desc: "Understand highest common factor and least common multiple.", btnText: "Start" },
+            { id: 3, img: "https://picsum.photos/300/200?random=3", title: "Decimal Fractions", label: "Quantitative Aptitude", desc: "Master operations with decimal fractions.", btnText: "Start" },
+            { id: 4, img: "https://picsum.photos/300/200?random=4", title: "Simplification", label: "Quantitative Aptitude", desc: "Simplify complex numerical problems easily.", btnText: "Start" },
+            { id: 5, img: "https://picsum.photos/300/200?random=5", title: "Surds & Indices", label: "Quantitative Aptitude", desc: "Learn powers, roots, and surds concepts.", btnText: "Start" },
+            { id: 6, img: "https://picsum.photos/300/200?random=6", title: "Percentages", label: "Quantitative Aptitude", desc: "Calculate percentage and related problems.", btnText: "Start" },
+            { id: 7, img: "https://picsum.photos/300/200?random=7", title: "Profit, Loss & Discount", label: "Quantitative Aptitude", desc: "Solve real-life profit, loss, and discount problems.", btnText: "Start" },
+            { id: 8, img: "https://picsum.photos/300/200?random=8", title: "Ratio & Proportion", label: "Quantitative Aptitude", desc: "Learn ratio, proportion, and partnership calculations.", btnText: "Start" },
+            { id: 9, img: "https://picsum.photos/300/200?random=9", title: "Partnership", label: "Quantitative Aptitude", desc: "Calculate shares and profits in partnership problems.", btnText: "Start" },
+            { id: 10, img: "https://picsum.photos/300/200?random=10", title: "Mixtures & Alligations", label: "Quantitative Aptitude", desc: "Solve mixture and alligation problems easily.", btnText: "Start" },
+            { id: 11, img: "https://picsum.photos/300/200?random=11", title: "Simple & Compound Interest", label: "Quantitative Aptitude", desc: "Learn interest calculations step by step.", btnText: "Start" },
+            { id: 12, img: "https://picsum.photos/300/200?random=12", title: "Time, Work & Wages", label: "Quantitative Aptitude", desc: "Solve time, work, and wages based problems.", btnText: "Start" },
+            { id: 13, img: "https://picsum.photos/300/200?random=13", title: "Pipes & Cisterns", label: "Quantitative Aptitude", desc: "Learn problems related to pipes, tanks, and cisterns.", btnText: "Start" },
+            { id: 14, img: "https://picsum.photos/300/200?random=14", title: "Time & Distance", label: "Quantitative Aptitude", desc: "Solve speed, distance, and time related problems.", btnText: "Start" },
+            { id: 15, img: "https://picsum.photos/300/200?random=15", title: "Boats & Streams", label: "Quantitative Aptitude", desc: "Master boats and streams speed problems.", btnText: "Start" },
+            { id: 16, img: "https://picsum.photos/300/200?random=16", title: "Averages", label: "Quantitative Aptitude", desc: "Calculate averages and related problems.", btnText: "Start" },
+            { id: 17, img: "https://picsum.photos/300/200?random=17", title: "Ages", label: "Quantitative Aptitude", desc: "Solve age-related numerical problems.", btnText: "Start" },
+            { id: 18, img: "https://picsum.photos/300/200?random=18", title: "Algebra", label: "Quantitative Aptitude", desc: "Learn basic, linear, and quadratic equations.", btnText: "Start" },
+            { id: 19, img: "https://picsum.photos/300/200?random=19", title: "Trigonometry & Heights & Distances", label: "Quantitative Aptitude", desc: "Understand trigonometry for practical problems.", btnText: "Start" },
+            { id: 20, img: "https://picsum.photos/300/200?random=20", title: "Probability", label: "Quantitative Aptitude", desc: "Master probability and chance calculations.", btnText: "Start" },
+            { id: 21, img: "https://picsum.photos/300/200?random=21", title: "Permutation & Combination", label: "Quantitative Aptitude", desc: "Learn arrangement and selection techniques.", btnText: "Start" },
+            { id: 22, img: "https://picsum.photos/300/200?random=22", title: "Logarithms", label: "Quantitative Aptitude", desc: "Understand logarithmic calculations.", btnText: "Start" },
+            { id: 23, img: "https://picsum.photos/300/200?random=23", title: "Sequence & Series", label: "Quantitative Aptitude", desc: "Solve sequence and series problems.", btnText: "Start" },
+            { id: 24, img: "https://picsum.photos/300/200?random=24", title: "Data Sufficiency / Data Adequacy", label: "Quantitative Aptitude", desc: "Evaluate data sufficiency questions.", btnText: "Start" },
+        ]
+
+        const VerbalReasoning = [
+            // Verbal Reasoning
+            { id: 25, img: "https://picsum.photos/300/200?random=25", title: "Logical Deduction / Logic", label: "Verbal Reasoning", desc: "Analyze logical deduction and reasoning.", btnText: "Start" },
+            { id: 26, img: "https://picsum.photos/300/200?random=26", title: "Statement – Arguments", label: "Verbal Reasoning", desc: "Learn how to handle arguments statements.", btnText: "Start" },
+            { id: 27, img: "https://picsum.photos/300/200?random=27", title: "Statement – Assumptions", label: "Verbal Reasoning", desc: "Understand assumptions in statements.", btnText: "Start" },
+            { id: 28, img: "https://picsum.photos/300/200?random=28", title: "Statement – Courses of Action", label: "Verbal Reasoning", desc: "Analyze possible courses of action.", btnText: "Start" },
+            { id: 29, img: "https://picsum.photos/300/200?random=29", title: "Statement – Conclusions", label: "Verbal Reasoning", desc: "Determine conclusions from statements.", btnText: "Start" },
+            { id: 30, img: "https://picsum.photos/300/200?random=30", title: "Syllogisms", label: "Verbal Reasoning", desc: "Learn syllogism-based reasoning.", btnText: "Start" },
+            { id: 31, img: "https://picsum.photos/300/200?random=31", title: "Analogy (Verbal)", label: "Verbal Reasoning", desc: "Solve verbal analogy problems.", btnText: "Start" },
+            { id: 32, img: "https://picsum.photos/300/200?random=32", title: "Classification", label: "Verbal Reasoning", desc: "Practice classification-based reasoning.", btnText: "Start" },
+            { id: 33, img: "https://picsum.photos/300/200?random=33", title: "Coding – Decoding", label: "Verbal Reasoning", desc: "Learn coding and decoding techniques.", btnText: "Start" },
+            { id: 34, img: "https://picsum.photos/300/200?random=34", title: "Blood Relations", label: "Verbal Reasoning", desc: "Understand blood relation puzzles.", btnText: "Start" },
+            { id: 35, img: "https://picsum.photos/300/200?random=35", title: "Directions & Distances", label: "Verbal Reasoning", desc: "Solve directions and distance problems.", btnText: "Start" },
+            { id: 36, img: "https://picsum.photos/300/200?random=36", title: "Ranking / Order", label: "Verbal Reasoning", desc: "Analyze ranking and order questions.", btnText: "Start" },
+            { id: 37, img: "https://picsum.photos/300/200?random=37", title: "Sequence / Series", label: "Verbal Reasoning", desc: "Practice sequence and series problems.", btnText: "Start" },
+            { id: 38, img: "https://picsum.photos/300/200?random=38", title: "Calendar & Clocks", label: "Verbal Reasoning", desc: "Solve calendar and clock problems.", btnText: "Start" },
+            { id: 39, img: "https://picsum.photos/300/200?random=39", title: "Decision Making", label: "Verbal Reasoning", desc: "Learn decision making strategies.", btnText: "Start" },
+            { id: 40, img: "https://picsum.photos/300/200?random=40", title: "Input – Output", label: "Verbal Reasoning", desc: "Practice input-output questions.", btnText: "Start" },
+            { id: 41, img: "https://picsum.photos/300/200?random=41", title: "Assertion & Reason", label: "Verbal Reasoning", desc: "Analyze assertions and reasons.", btnText: "Start" },
+            { id: 42, img: "https://picsum.photos/300/200?random=42", title: "Cause & Effect", label: "Verbal Reasoning", desc: "Understand cause and effect relationships.", btnText: "Start" },
+        ]
+
+        const LogicalReasoning = [
+            // Logical Reasoning
+            { id: 43, img: "https://picsum.photos/300/200?random=43", title: "Series (Figure Series)", label: "Logical Reasoning", desc: "Analyze figure series and patterns.", btnText: "Start" },
+            { id: 44, img: "https://picsum.photos/300/200?random=44", title: "Analogy (Figural)", label: "Logical Reasoning", desc: "Solve figural analogy problems.", btnText: "Start" },
+            { id: 45, img: "https://picsum.photos/300/200?random=45", title: "Classification (Figures)", label: "Logical Reasoning", desc: "Practice classification of figures.", btnText: "Start" },
+            { id: 46, img: "https://picsum.photos/300/200?random=46", title: "Mirror & Water Images", label: "Logical Reasoning", desc: "Learn mirror and water image concepts.", btnText: "Start" },
+            { id: 47, img: "https://picsum.photos/300/200?random=47", title: "Paper Folding & Unfolding", label: "Logical Reasoning", desc: "Practice paper folding problems.", btnText: "Start" },
+            { id: 48, img: "https://picsum.photos/300/200?random=48", title: "Paper Cutting & Folding", label: "Logical Reasoning", desc: "Solve paper cutting and folding puzzles.", btnText: "Start" },
+            { id: 49, img: "https://picsum.photos/300/200?random=49", title: "Embedded Figures", label: "Logical Reasoning", desc: "Find embedded figures in patterns.", btnText: "Start" },
+            { id: 50, img: "https://picsum.photos/300/200?random=50", title: "Spotting the Difference", label: "Logical Reasoning", desc: "Identify differences between similar figures.", btnText: "Start" },
+            { id: 51, img: "https://picsum.photos/300/200?random=51", title: "Cubes & Dice", label: "Logical Reasoning", desc: "Solve problems based on cubes and dice patterns.", btnText: "Start" },
+            { id: 52, img: "https://picsum.photos/300/200?random=52", title: "Construction of Shapes / Patterns", label: "Logical Reasoning", desc: "Learn to construct shapes and analyze patterns.", btnText: "Start" },
+            { id: 53, img: "https://picsum.photos/300/200?random=53", title: "Figure Rotation / Orientation", label: "Logical Reasoning", desc: "Practice figure rotation and orientation problems.", btnText: "Start" },
+            { id: 54, img: "https://picsum.photos/300/200?random=54", title: "Missing Figure / Completion", label: "Logical Reasoning", desc: "Find the missing figure to complete the pattern.", btnText: "Start" }
+        ]
+
+
+        const ProgrammingBasics = [
+            { id: 1, img: "https://picsum.photos/300/200?random=101", title: "Hello World & I/O", label: "Programming Basics", desc: "Start with basic input/output and first program.", btnText: "Start" },
+            { id: 2, img: "https://picsum.photos/300/200?random=102", title: "Variables & Data Types", label: "Programming Basics", desc: "Learn about variables, constants, and primitive types.", btnText: "Start" },
+            { id: 3, img: "https://picsum.photos/300/200?random=103", title: "Operators", label: "Programming Basics", desc: "Understand arithmetic, logical, and bitwise operators.", btnText: "Start" },
+            { id: 4, img: "https://picsum.photos/300/200?random=104", title: "Conditionals", label: "Programming Basics", desc: "Master if-else, switch and conditional constructs.", btnText: "Start" },
+            { id: 5, img: "https://picsum.photos/300/200?random=105", title: "Loops", label: "Programming Basics", desc: "Learn for, while, do-while and iterations.", btnText: "Start" },
+            { id: 6, img: "https://picsum.photos/300/200?random=106", title: "Functions", label: "Programming Basics", desc: "Understand function definitions, scope, and recursion.", btnText: "Start" },
+            { id: 7, img: "https://picsum.photos/300/200?random=107", title: "Arrays", label: "Programming Basics", desc: "Learn operations on 1D & 2D arrays.", btnText: "Start" },
+            { id: 8, img: "https://picsum.photos/300/200?random=108", title: "Strings", label: "Programming Basics", desc: "Explore string operations, substring, palindrome, etc.", btnText: "Start" },
+            { id: 9, img: "https://picsum.photos/300/200?random=109", title: "Recursion", label: "Programming Basics", desc: "Learn recursion basics with simple problems.", btnText: "Start" },
+            { id: 10, img: "https://picsum.photos/300/200?random=110", title: "Complexity Analysis", label: "Programming Basics", desc: "Introduction to Big-O, Big-Theta, Big-Omega.", btnText: "Start" }
+        ];
+
+        const DataStructures = [
+            { id: 11, img: "https://picsum.photos/300/200?random=111", title: "Linked List", label: "Data Structures", desc: "Understand singly, doubly, and circular linked lists.", btnText: "Start" },
+            { id: 12, img: "https://picsum.photos/300/200?random=112", title: "Stack", label: "Data Structures", desc: "LIFO operations, applications, and parenthesis matching.", btnText: "Start" },
+            { id: 13, img: "https://picsum.photos/300/200?random=113", title: "Queue", label: "Data Structures", desc: "Learn normal, circular, and priority queues.", btnText: "Start" },
+            { id: 14, img: "https://picsum.photos/300/200?random=114", title: "Hashing", label: "Data Structures", desc: "Explore hash tables, collisions, and applications.", btnText: "Start" },
+            { id: 15, img: "https://picsum.photos/300/200?random=115", title: "Binary Tree", label: "Data Structures", desc: "Learn traversals, height, diameter and properties.", btnText: "Start" },
+            { id: 16, img: "https://picsum.photos/300/200?random=116", title: "Binary Search Tree", label: "Data Structures", desc: "Explore BST insertion, deletion and search.", btnText: "Start" },
+            { id: 17, img: "https://picsum.photos/300/200?random=117", title: "Heap", label: "Data Structures", desc: "Learn about min-heap, max-heap and heap sort.", btnText: "Start" },
+            { id: 18, img: "https://picsum.photos/300/200?random=118", title: "Graphs", label: "Data Structures", desc: "Understand graph representation, BFS & DFS.", btnText: "Start" },
+            { id: 19, img: "https://picsum.photos/300/200?random=119", title: "Tries", label: "Data Structures", desc: "Learn prefix trees and string storage.", btnText: "Start" }
+        ];
+
+        const Algorithms = [
+            { id: 20, img: "https://picsum.photos/300/200?random=120", title: "Sorting", label: "Algorithms", desc: "Bubble, Selection, Insertion, Merge, Quick sort.", btnText: "Start" },
+            { id: 21, img: "https://picsum.photos/300/200?random=121", title: "Searching", label: "Algorithms", desc: "Linear search, Binary search, and variations.", btnText: "Start" },
+            { id: 22, img: "https://picsum.photos/300/200?random=122", title: "Greedy Algorithms", label: "Algorithms", desc: "Learn activity selection, Huffman encoding.", btnText: "Start" },
+            { id: 23, img: "https://picsum.photos/300/200?random=123", title: "Dynamic Programming", label: "Algorithms", desc: "Master DP with Fibonacci, LCS, Knapsack, etc.", btnText: "Start" },
+            { id: 24, img: "https://picsum.photos/300/200?random=124", title: "Divide & Conquer", label: "Algorithms", desc: "Binary search, Strassen’s algorithm, etc.", btnText: "Start" },
+            { id: 25, img: "https://picsum.photos/300/200?random=125", title: "Graph Algorithms", label: "Algorithms", desc: "Dijkstra, Bellman-Ford, MST (Kruskal/Prim).", btnText: "Start" },
+            { id: 26, img: "https://picsum.photos/300/200?random=126", title: "Backtracking", label: "Algorithms", desc: "Solve N-Queens, Sudoku, Rat in a Maze.", btnText: "Start" },
+            { id: 27, img: "https://picsum.photos/300/200?random=127", title: "String Algorithms", label: "Algorithms", desc: "KMP, Rabin-Karp, Z-Algorithm.", btnText: "Start" }
+        ];
+
+        const AdvancedProgramming = [
+            { id: 28, img: "https://picsum.photos/300/200?random=128", title: "Bit Manipulation", label: "Advanced Programming", desc: "Learn XOR tricks, subsets, and power set.", btnText: "Start" },
+            { id: 29, img: "https://picsum.photos/300/200?random=129", title: "Disjoint Set Union", label: "Advanced Programming", desc: "Union-Find and Kruskal’s algorithm.", btnText: "Start" },
+            { id: 30, img: "https://picsum.photos/300/200?random=130", title: "Segment Trees", label: "Advanced Programming", desc: "Learn range queries & lazy propagation.", btnText: "Start" },
+            { id: 31, img: "https://picsum.photos/300/200?random=131", title: "Fenwick Tree", label: "Advanced Programming", desc: "Efficient prefix sum queries.", btnText: "Start" },
+            { id: 32, img: "https://picsum.photos/300/200?random=132", title: "Binary Search on Answers", label: "Advanced Programming", desc: "Optimize problems using binary search logic.", btnText: "Start" },
+            { id: 33, img: "https://picsum.photos/300/200?random=133", title: "Computational Geometry", label: "Advanced Programming", desc: "Convex hull, line intersection, etc.", btnText: "Start" },
+            { id: 34, img: "https://picsum.photos/300/200?random=134", title: "Tree DP", label: "Advanced Programming", desc: "Dynamic programming on trees.", btnText: "Start" },
+            { id: 35, img: "https://picsum.photos/300/200?random=135", title: "Game Theory", label: "Advanced Programming", desc: "Learn Nim game, Grundy numbers.", btnText: "Start" }
+        ];
+
+        function generateRandomGradient() {
+            const colors = [
+                "#ff6a00", "#ee0979", "#00c9ff", "#92fe9d", "#f5576c", "#4facfe", "#43e97b"
+            ];
+
+            const c1 = colors[Math.floor(Math.random() * colors.length)];
+            const c2 = colors[Math.floor(Math.random() * colors.length)];
+            return `linear-gradient(135deg, ${c1}, ${c2})`;
+        }
+
+        const googleFonts = [
+            "Orbitron",
+            "Fredoka",
+        ];
+
+
+
+        function loadGoogleFont(fontName) {
+            const linkId = `gf-${fontName.replace(/\s+/g, '-')}`;
+            if (!document.getElementById(linkId)) {
+                const link = document.createElement("link");
+                link.id = linkId;
+                link.rel = "stylesheet";
+                link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}&display=swap`;
+                document.head.appendChild(link);
+            }
+        }
+
+
+
+        function renderCards(data, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+
+            data.forEach((card) => {
+                const cardDiv = document.createElement("div");
+                cardDiv.classList.add("card");
+
+                cardDiv.addEventListener("click", () => {
+                    console.log("Card clicked:", card.id, card.title);
+                    let fileName = sanitizeFilename(card.title)
+                    window.location.href = `Aptitude/${fileName}.html`
+                });
+
+                // 🎨 Dynamic "image" div using title
+                const imageDiv = document.createElement("div");
+                imageDiv.classList.add("card-image");
+                imageDiv.textContent = card.title;
+
+                // 🎨 Gradient background
+                const gradient = generateRandomGradient();
+                imageDiv.style.background = gradient;
+
+                // 🔤 Random Google Font
+                const font = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+                loadGoogleFont(font);
+                imageDiv.style.fontFamily = `'${font}', sans-serif`;
+
+                const cardBody = document.createElement("div");
+                cardBody.classList.add("card-body");
+
+                const title = document.createElement("h3");
+                title.textContent = card.title;
+
+                const label = document.createElement("h4");
+                label.textContent = card.label;
+
+                const desc = document.createElement("p");
+                desc.textContent = card.desc;
+
+                const button = document.createElement("button");
+                button.textContent = card.btnText;
+
+                button.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    console.log("Button clicked for card:", card.id, card.title);
+                });
+
+                cardBody.appendChild(title);
+                cardBody.appendChild(label);
+                cardBody.appendChild(desc);
+                cardBody.appendChild(button);
+
+                cardDiv.appendChild(imageDiv);
+                cardDiv.appendChild(cardBody);
+                container.appendChild(cardDiv);
+            });
+        }
+
+
+        // Initial population
+        renderCards(QuantitativeAptitude, "quantitativeAptitude");
+        renderCards(VerbalReasoning, "verbalReasoning");
+        renderCards(LogicalReasoning, "logicalReasoning");
+        renderCards(ProgrammingBasics, "programmingBasics");
+        renderCards(DataStructures, "dataStructures");
+        renderCards(Algorithms, "algorithms");
+        renderCards(AdvancedProgramming, "advancedProgramming");
+
+        // 🔎 Unified Search
+        const searchInput = document.getElementById("searchInput");
+        const noResultsDiv = document.createElement("div");
+        noResultsDiv.id = "noResults";
+        noResultsDiv.textContent = "No results found!";
+        noResultsDiv.style.display = "none";
+        noResultsDiv.style.textAlign = "center";
+        noResultsDiv.style.color = "#aaa";
+        noResultsDiv.style.fontSize = "1.2rem";
+        noResultsDiv.style.marginTop = "20px";
+        document.body.appendChild(noResultsDiv);
+
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.toLowerCase();
+
+            // Filter each dataset separately
+            const filteredQuant = QuantitativeAptitude.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredVerbal = VerbalReasoning.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredLogical = LogicalReasoning.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredBasics = ProgrammingBasics.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredDS = DataStructures.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredAlgo = Algorithms.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+            const filteredAdv = AdvancedProgramming.filter(card =>
+                card.title.toLowerCase().includes(query) ||
+                card.desc.toLowerCase().includes(query) ||
+                card.label.toLowerCase().includes(query)
+            );
+
+            // Re-render with filtered results
+            renderCards(filteredQuant, "quantitativeAptitude");
+            renderCards(filteredVerbal, "verbalReasoning");
+            renderCards(filteredLogical, "logicalReasoning");
+            renderCards(filteredBasics, "programmingBasics");
+            renderCards(filteredDS, "dataStructures");
+            renderCards(filteredAlgo, "algorithms");
+            renderCards(filteredAdv, "advancedProgramming");
+
+            // Toggle each section + header visibility
+            const sections = [
+                { filtered: filteredQuant, container: "quantitativeAptitude" },
+                { filtered: filteredVerbal, container: "verbalReasoning" },
+                { filtered: filteredLogical, container: "logicalReasoning" },
+                { filtered: filteredBasics, container: "programmingBasics" },
+                { filtered: filteredDS, container: "dataStructures" },
+                { filtered: filteredAlgo, container: "algorithms" },
+                { filtered: filteredAdv, container: "advancedProgramming" }
+            ];
+
+            sections.forEach(({ filtered, container }) => {
+                const cont = document.getElementById(container);
+                const header = cont.previousElementSibling;
+                if (filtered.length) {
+                    cont.style.display = "flex";   // keep your flex layout
+                    header.style.display = "block";
+                } else {
+                    cont.style.display = "none";
+                    header.style.display = "none";
+                }
+            });
+
+            // Show "No results found" if all empty
+            if (!filteredQuant.length &&
+                !filteredVerbal.length &&
+                !filteredLogical.length &&
+                !filteredBasics.length &&
+                !filteredDS.length &&
+                !filteredAlgo.length &&
+                !filteredAdv.length) {
+                noResultsDiv.style.display = "block";
+            } else {
+                noResultsDiv.style.display = "none";
+            }
+        });
+
+        // Sentences for typing effect
+        const placeholderTexts = [
+            "Search Python tutorials...",
+            "Find Java practice problems...",
+            "Look up Data Structures...",
+            "Explore Aptitude questions...",
+            "Practice Reasoning tests..."
+        ];
+
+        let currentIndex = 0;
+        let charIndex = 0;
+        let typingSpeed = 100; // ms per char
+
+        function typePlaceholder() {
+            let currentText = placeholderTexts[currentIndex];
+            searchInput.setAttribute("placeholder", currentText.substring(0, charIndex));
+
+            charIndex++;
+
+            if (charIndex <= currentText.length) {
+                setTimeout(typePlaceholder, typingSpeed);
+            } else {
+                // After finishing, wait then erase
+                setTimeout(erasePlaceholder, 1500);
+            }
+        }
+
+        function erasePlaceholder() {
+            let currentText = placeholderTexts[currentIndex];
+            searchInput.setAttribute("placeholder", currentText.substring(0, charIndex));
+
+            charIndex--;
+
+            if (charIndex >= 0) {
+                setTimeout(erasePlaceholder, 50);
+            } else {
+                // Move to next text
+                currentIndex = (currentIndex + 1) % placeholderTexts.length;
+                setTimeout(typePlaceholder, 300);
+            }
+        }
+
+        // Start the typing effect
+        typePlaceholder();
+
+        // ===== Theme Toggle =====
+        function enableLightMode() {
+            document.body.classList.add("light-mode");
+            document.body.classList.remove("dark-mode");
+        }
+
+        function enableDarkMode() {
+            document.body.classList.add("dark-mode");
+            document.body.classList.remove("light-mode");
+        }
+
+        // Dark mode || Light Mode function calss
+        // document.querySelector(".button-85").addEventListener("click", enableDarkMode);   // AI Mode = Dark
+        // document.querySelector(".button-13").addEventListener("click", enableLightMode);  // Classical Mode = Light
+
+        document.querySelector(".button-85").addEventListener("click", () => {
+            // location.replace("ai_mode.html")
+            alert("AI feature is on production")
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Quiz Application Design */
+
+        body {
+            background: #11101d;
+            font-family: arial, sans-serif;
+            color: rgb(255, 255, 255);
+        }
+
+        #quizContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin: 50px auto;
+            width: 95%;
+        }
+
+        /* Each Question Card */
+        .quiz-question {
+            background: #1c1b2d;
+            border-radius: 12px;
+            padding: 15px 20px 25px 20px;
+            /* Top, Right, Bottom, Left */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-style: solid;
+            border-width: 0.25px;
+            color: white;
+        }
+
+        /* Hover Effect */
+        /* .quiz-question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+        } */
+
+        /* Question Header (h4) */
+        .quiz-question h4 {
+            font-size: 14px;
+            font-weight: 200;
+            color: #fff;
+            margin: 0 0 8px 0;
+            /* Remove top margin, small bottom margin */
+            padding: 8px 12px;
+            background: #24243a;
+            border-radius: 8px;
+            display: inline-block;
+            /* Makes width auto */
+        }
+
+        /* Question Text */
+        .quiz-question .question-text {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 15px;
+            padding-left: 4px;
+            /* small padding for alignment */
+        }
+
+        /* Option List */
+        .quiz-question label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            padding: 8px 10px;
+            /* Padding for option items */
+            border-radius: 6px;
+        }
+
+        /* Circle Letter for Options */
+        .option-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 200;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        /* Hover effect on label */
+        .quiz-question label:hover {
+            background: #11101d;
+            color: #fff;
+        }
+
+        /* Hide original radio */
+        .quiz-question input[type="radio"] {
+            display: none;
+        }
+
+        /* Correct / Incorrect Highlights */
+        .quiz-question .option-correct .option-circle {
+            background: #0f3d0f;
+            border-color: #4ade80;
+            color: #b3ffb3;
+        }
+
+        .quiz-question .option-incorrect .option-circle {
+            background: #3d0f0f;
+            border-color: #f87171;
+            color: #ffb3b3;
+        }
+
+        /* Explanation Box */
+        .quiz-question .explanation {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #24243a;
+            color: #fff;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            #quizContainer {
+                margin: 20px;
+            }
+
+            .quiz-question {
+                padding: 12px 15px 20px 15px;
+            }
+
+            .option-circle {
+                width: 20px;
+                height: 20px;
+                font-size: 0.8rem;
+            }
+        }
+
+        #mockTestTitle {
+            margin: 15px;
+            font-size: 17px;
+            font-weight: lighter;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #24243a;
+            border-top-color: blue;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            color: white;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #mockTestNavbar {
+            width: 100%;
+            position: fixed;
+            top: 0px;
+            right: 2px;
+            margin: auto;
+            background-color: #1c1b2d;
+        }
+
+        #proceedProgrammingBtn {
+            padding: 12px 30px;
+            color: white;
+            background-color: rgb(2, 82, 2);
+            border-style: none;
+            border-radius: 25px;
+            text-align: center;
+            display: inline-block;
+            font-size: 13px;
+            cursor: pointer;
+        }
+    </style>
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Number System Quiz</title>
+</head>
+
+<body>
+    <div id="mockTestNavbar">
+        <p id="mockTestTitle">Mock Test Aptitude - 30 Marks</p>
+    </div>
+    <br><br>
+    <section class="home-section">
+        <div id="quizContainer"></div>
+    </section>
+    <div id="loadingIndicator" style="display: none; text-align: center; margin-top: 20px;">
+        <div class="spinner" style="margin-bottom: 10px;"></div>
+        <p>Generating Number System Questions. Please wait...</p>
+    </div>
+    <script type="module">
+
+        let numberSystemQuestions;
+
+        const prompt = `
+Give me the question answer and explanation for the quiz portal give me 30 question
+
+Example reponse pattern
+
+const Quizquestions = [
+        {
+            question: "What is the smallest prime number?",
+            option1: "0",
+            option2: "1",
+            option3: "2",
+            option4: "3",
+            difficulty: "Easy",
+            correct: "option3",
+            explanation: "2 is the smallest and the only even prime number."
+        },
+        {
+            question: "Which of the following is a perfect square?",
+            option1: "12",
+            option2: "16",
+            option3: "18",
+            option4: "20",
+            difficulty: "Easy",
+            correct: "option2",
+            explanation: "16 = 4^2, hence it is a perfect square."
+        },
+        {
+            question: "What is the sum of first 10 natural numbers?",
+            option1: "45",
+            option2: "50",
+            option3: "55",
+            option4: "60",
+            difficulty: "Medium",
+            correct: "option3",
+            explanation: "Sum of first n natural numbers = n*(n+1)/2 = 10*11/2 = 55."
+        }
+    ];
+
+    Syllabus
+
+            const QuantitativeAptitude = [
+            // Quantitative Aptitude
+            { id: 1, img: "https://picsum.photos/300/200?random=1", title: "Number System", label: "Quantitative Aptitude", desc: "Learn about numbers, digits, and their properties.", btnText: "Start" },
+            { id: 2, img: "https://picsum.photos/300/200?random=2", title: "HCF & LCM", label: "Quantitative Aptitude", desc: "Understand highest common factor and least common multiple.", btnText: "Start" },
+            { id: 3, img: "https://picsum.photos/300/200?random=3", title: "Decimal Fractions", label: "Quantitative Aptitude", desc: "Master operations with decimal fractions.", btnText: "Start" },
+            { id: 4, img: "https://picsum.photos/300/200?random=4", title: "Simplification", label: "Quantitative Aptitude", desc: "Simplify complex numerical problems easily.", btnText: "Start" },
+            { id: 5, img: "https://picsum.photos/300/200?random=5", title: "Surds & Indices", label: "Quantitative Aptitude", desc: "Learn powers, roots, and surds concepts.", btnText: "Start" },
+            { id: 6, img: "https://picsum.photos/300/200?random=6", title: "Percentages", label: "Quantitative Aptitude", desc: "Calculate percentage and related problems.", btnText: "Start" },
+            { id: 7, img: "https://picsum.photos/300/200?random=7", title: "Profit, Loss & Discount", label: "Quantitative Aptitude", desc: "Solve real-life profit, loss, and discount problems.", btnText: "Start" },
+            { id: 8, img: "https://picsum.photos/300/200?random=8", title: "Ratio & Proportion", label: "Quantitative Aptitude", desc: "Learn ratio, proportion, and partnership calculations.", btnText: "Start" },
+            { id: 9, img: "https://picsum.photos/300/200?random=9", title: "Partnership", label: "Quantitative Aptitude", desc: "Calculate shares and profits in partnership problems.", btnText: "Start" },
+            { id: 10, img: "https://picsum.photos/300/200?random=10", title: "Mixtures & Alligations", label: "Quantitative Aptitude", desc: "Solve mixture and alligation problems easily.", btnText: "Start" },
+            { id: 11, img: "https://picsum.photos/300/200?random=11", title: "Simple & Compound Interest", label: "Quantitative Aptitude", desc: "Learn interest calculations step by step.", btnText: "Start" },
+            { id: 12, img: "https://picsum.photos/300/200?random=12", title: "Time, Work & Wages", label: "Quantitative Aptitude", desc: "Solve time, work, and wages based problems.", btnText: "Start" },
+            { id: 13, img: "https://picsum.photos/300/200?random=13", title: "Pipes & Cisterns", label: "Quantitative Aptitude", desc: "Learn problems related to pipes, tanks, and cisterns.", btnText: "Start" },
+            { id: 14, img: "https://picsum.photos/300/200?random=14", title: "Time & Distance", label: "Quantitative Aptitude", desc: "Solve speed, distance, and time related problems.", btnText: "Start" },
+            { id: 15, img: "https://picsum.photos/300/200?random=15", title: "Boats & Streams", label: "Quantitative Aptitude", desc: "Master boats and streams speed problems.", btnText: "Start" },
+            { id: 16, img: "https://picsum.photos/300/200?random=16", title: "Averages", label: "Quantitative Aptitude", desc: "Calculate averages and related problems.", btnText: "Start" },
+            { id: 17, img: "https://picsum.photos/300/200?random=17", title: "Ages", label: "Quantitative Aptitude", desc: "Solve age-related numerical problems.", btnText: "Start" },
+            { id: 18, img: "https://picsum.photos/300/200?random=18", title: "Algebra", label: "Quantitative Aptitude", desc: "Learn basic, linear, and quadratic equations.", btnText: "Start" },
+            { id: 19, img: "https://picsum.photos/300/200?random=19", title: "Trigonometry & Heights & Distances", label: "Quantitative Aptitude", desc: "Understand trigonometry for practical problems.", btnText: "Start" },
+            { id: 20, img: "https://picsum.photos/300/200?random=20", title: "Probability", label: "Quantitative Aptitude", desc: "Master probability and chance calculations.", btnText: "Start" },
+            { id: 21, img: "https://picsum.photos/300/200?random=21", title: "Permutation & Combination", label: "Quantitative Aptitude", desc: "Learn arrangement and selection techniques.", btnText: "Start" },
+            { id: 22, img: "https://picsum.photos/300/200?random=22", title: "Logarithms", label: "Quantitative Aptitude", desc: "Understand logarithmic calculations.", btnText: "Start" },
+            { id: 23, img: "https://picsum.photos/300/200?random=23", title: "Sequence & Series", label: "Quantitative Aptitude", desc: "Solve sequence and series problems.", btnText: "Start" },
+            { id: 24, img: "https://picsum.photos/300/200?random=24", title: "Data Sufficiency / Data Adequacy", label: "Quantitative Aptitude", desc: "Evaluate data sufficiency questions.", btnText: "Start" },
+        ]
+
+        const VerbalReasoning = [
+            // Verbal Reasoning
+            { id: 25, img: "https://picsum.photos/300/200?random=25", title: "Logical Deduction / Logic", label: "Verbal Reasoning", desc: "Analyze logical deduction and reasoning.", btnText: "Start" },
+            { id: 26, img: "https://picsum.photos/300/200?random=26", title: "Statement – Arguments", label: "Verbal Reasoning", desc: "Learn how to handle arguments statements.", btnText: "Start" },
+            { id: 27, img: "https://picsum.photos/300/200?random=27", title: "Statement – Assumptions", label: "Verbal Reasoning", desc: "Understand assumptions in statements.", btnText: "Start" },
+            { id: 28, img: "https://picsum.photos/300/200?random=28", title: "Statement – Courses of Action", label: "Verbal Reasoning", desc: "Analyze possible courses of action.", btnText: "Start" },
+            { id: 29, img: "https://picsum.photos/300/200?random=29", title: "Statement – Conclusions", label: "Verbal Reasoning", desc: "Determine conclusions from statements.", btnText: "Start" },
+            { id: 30, img: "https://picsum.photos/300/200?random=30", title: "Syllogisms", label: "Verbal Reasoning", desc: "Learn syllogism-based reasoning.", btnText: "Start" },
+            { id: 31, img: "https://picsum.photos/300/200?random=31", title: "Analogy (Verbal)", label: "Verbal Reasoning", desc: "Solve verbal analogy problems.", btnText: "Start" },
+            { id: 32, img: "https://picsum.photos/300/200?random=32", title: "Classification", label: "Verbal Reasoning", desc: "Practice classification-based reasoning.", btnText: "Start" },
+            { id: 33, img: "https://picsum.photos/300/200?random=33", title: "Coding – Decoding", label: "Verbal Reasoning", desc: "Learn coding and decoding techniques.", btnText: "Start" },
+            { id: 34, img: "https://picsum.photos/300/200?random=34", title: "Blood Relations", label: "Verbal Reasoning", desc: "Understand blood relation puzzles.", btnText: "Start" },
+            { id: 35, img: "https://picsum.photos/300/200?random=35", title: "Directions & Distances", label: "Verbal Reasoning", desc: "Solve directions and distance problems.", btnText: "Start" },
+            { id: 36, img: "https://picsum.photos/300/200?random=36", title: "Ranking / Order", label: "Verbal Reasoning", desc: "Analyze ranking and order questions.", btnText: "Start" },
+            { id: 37, img: "https://picsum.photos/300/200?random=37", title: "Sequence / Series", label: "Verbal Reasoning", desc: "Practice sequence and series problems.", btnText: "Start" },
+            { id: 38, img: "https://picsum.photos/300/200?random=38", title: "Calendar & Clocks", label: "Verbal Reasoning", desc: "Solve calendar and clock problems.", btnText: "Start" },
+            { id: 39, img: "https://picsum.photos/300/200?random=39", title: "Decision Making", label: "Verbal Reasoning", desc: "Learn decision making strategies.", btnText: "Start" },
+            { id: 40, img: "https://picsum.photos/300/200?random=40", title: "Input – Output", label: "Verbal Reasoning", desc: "Practice input-output questions.", btnText: "Start" },
+            { id: 41, img: "https://picsum.photos/300/200?random=41", title: "Assertion & Reason", label: "Verbal Reasoning", desc: "Analyze assertions and reasons.", btnText: "Start" },
+            { id: 42, img: "https://picsum.photos/300/200?random=42", title: "Cause & Effect", label: "Verbal Reasoning", desc: "Understand cause and effect relationships.", btnText: "Start" },
+        ]
+
+        const LogicalReasoning = [
+            // Logical Reasoning
+            { id: 43, img: "https://picsum.photos/300/200?random=43", title: "Series (Figure Series)", label: "Logical Reasoning", desc: "Analyze figure series and patterns.", btnText: "Start" },
+            { id: 44, img: "https://picsum.photos/300/200?random=44", title: "Analogy (Figural)", label: "Logical Reasoning", desc: "Solve figural analogy problems.", btnText: "Start" },
+            { id: 45, img: "https://picsum.photos/300/200?random=45", title: "Classification (Figures)", label: "Logical Reasoning", desc: "Practice classification of figures.", btnText: "Start" },
+            { id: 46, img: "https://picsum.photos/300/200?random=46", title: "Mirror & Water Images", label: "Logical Reasoning", desc: "Learn mirror and water image concepts.", btnText: "Start" },
+            { id: 47, img: "https://picsum.photos/300/200?random=47", title: "Paper Folding & Unfolding", label: "Logical Reasoning", desc: "Practice paper folding problems.", btnText: "Start" },
+            { id: 48, img: "https://picsum.photos/300/200?random=48", title: "Paper Cutting & Folding", label: "Logical Reasoning", desc: "Solve paper cutting and folding puzzles.", btnText: "Start" },
+            { id: 49, img: "https://picsum.photos/300/200?random=49", title: "Embedded Figures", label: "Logical Reasoning", desc: "Find embedded figures in patterns.", btnText: "Start" },
+            { id: 50, img: "https://picsum.photos/300/200?random=50", title: "Spotting the Difference", label: "Logical Reasoning", desc: "Identify differences between similar figures.", btnText: "Start" },
+            { id: 51, img: "https://picsum.photos/300/200?random=51", title: "Cubes & Dice", label: "Logical Reasoning", desc: "Solve problems based on cubes and dice patterns.", btnText: "Start" },
+            { id: 52, img: "https://picsum.photos/300/200?random=52", title: "Construction of Shapes / Patterns", label: "Logical Reasoning", desc: "Learn to construct shapes and analyze patterns.", btnText: "Start" },
+            { id: 53, img: "https://picsum.photos/300/200?random=53", title: "Figure Rotation / Orientation", label: "Logical Reasoning", desc: "Practice figure rotation and orientation problems.", btnText: "Start" },
+            { id: 54, img: "https://picsum.photos/300/200?random=54", title: "Missing Figure / Completion", label: "Logical Reasoning", desc: "Find the missing figure to complete the pattern.", btnText: "Start" }
+        ]
+
+
+        const ProgrammingBasics = [
+            { id: 1, img: "https://picsum.photos/300/200?random=101", title: "Hello World & I/O", label: "Programming Basics", desc: "Start with basic input/output and first program.", btnText: "Start" },
+            { id: 2, img: "https://picsum.photos/300/200?random=102", title: "Variables & Data Types", label: "Programming Basics", desc: "Learn about variables, constants, and primitive types.", btnText: "Start" },
+            { id: 3, img: "https://picsum.photos/300/200?random=103", title: "Operators", label: "Programming Basics", desc: "Understand arithmetic, logical, and bitwise operators.", btnText: "Start" },
+            { id: 4, img: "https://picsum.photos/300/200?random=104", title: "Conditionals", label: "Programming Basics", desc: "Master if-else, switch and conditional constructs.", btnText: "Start" },
+            { id: 5, img: "https://picsum.photos/300/200?random=105", title: "Loops", label: "Programming Basics", desc: "Learn for, while, do-while and iterations.", btnText: "Start" },
+            { id: 6, img: "https://picsum.photos/300/200?random=106", title: "Functions", label: "Programming Basics", desc: "Understand function definitions, scope, and recursion.", btnText: "Start" },
+            { id: 7, img: "https://picsum.photos/300/200?random=107", title: "Arrays", label: "Programming Basics", desc: "Learn operations on 1D & 2D arrays.", btnText: "Start" },
+            { id: 8, img: "https://picsum.photos/300/200?random=108", title: "Strings", label: "Programming Basics", desc: "Explore string operations, substring, palindrome, etc.", btnText: "Start" },
+            { id: 9, img: "https://picsum.photos/300/200?random=109", title: "Recursion", label: "Programming Basics", desc: "Learn recursion basics with simple problems.", btnText: "Start" },
+            { id: 10, img: "https://picsum.photos/300/200?random=110", title: "Complexity Analysis", label: "Programming Basics", desc: "Introduction to Big-O, Big-Theta, Big-Omega.", btnText: "Start" }
+        ];
+
+        const DataStructures = [
+            { id: 11, img: "https://picsum.photos/300/200?random=111", title: "Linked List", label: "Data Structures", desc: "Understand singly, doubly, and circular linked lists.", btnText: "Start" },
+            { id: 12, img: "https://picsum.photos/300/200?random=112", title: "Stack", label: "Data Structures", desc: "LIFO operations, applications, and parenthesis matching.", btnText: "Start" },
+            { id: 13, img: "https://picsum.photos/300/200?random=113", title: "Queue", label: "Data Structures", desc: "Learn normal, circular, and priority queues.", btnText: "Start" },
+            { id: 14, img: "https://picsum.photos/300/200?random=114", title: "Hashing", label: "Data Structures", desc: "Explore hash tables, collisions, and applications.", btnText: "Start" },
+            { id: 15, img: "https://picsum.photos/300/200?random=115", title: "Binary Tree", label: "Data Structures", desc: "Learn traversals, height, diameter and properties.", btnText: "Start" },
+            { id: 16, img: "https://picsum.photos/300/200?random=116", title: "Binary Search Tree", label: "Data Structures", desc: "Explore BST insertion, deletion and search.", btnText: "Start" },
+            { id: 17, img: "https://picsum.photos/300/200?random=117", title: "Heap", label: "Data Structures", desc: "Learn about min-heap, max-heap and heap sort.", btnText: "Start" },
+            { id: 18, img: "https://picsum.photos/300/200?random=118", title: "Graphs", label: "Data Structures", desc: "Understand graph representation, BFS & DFS.", btnText: "Start" },
+            { id: 19, img: "https://picsum.photos/300/200?random=119", title: "Tries", label: "Data Structures", desc: "Learn prefix trees and string storage.", btnText: "Start" }
+        ];
+
+        const Algorithms = [
+            { id: 20, img: "https://picsum.photos/300/200?random=120", title: "Sorting", label: "Algorithms", desc: "Bubble, Selection, Insertion, Merge, Quick sort.", btnText: "Start" },
+            { id: 21, img: "https://picsum.photos/300/200?random=121", title: "Searching", label: "Algorithms", desc: "Linear search, Binary search, and variations.", btnText: "Start" },
+            { id: 22, img: "https://picsum.photos/300/200?random=122", title: "Greedy Algorithms", label: "Algorithms", desc: "Learn activity selection, Huffman encoding.", btnText: "Start" },
+            { id: 23, img: "https://picsum.photos/300/200?random=123", title: "Dynamic Programming", label: "Algorithms", desc: "Master DP with Fibonacci, LCS, Knapsack, etc.", btnText: "Start" },
+            { id: 24, img: "https://picsum.photos/300/200?random=124", title: "Divide & Conquer", label: "Algorithms", desc: "Binary search, Strassen’s algorithm, etc.", btnText: "Start" },
+            { id: 25, img: "https://picsum.photos/300/200?random=125", title: "Graph Algorithms", label: "Algorithms", desc: "Dijkstra, Bellman-Ford, MST (Kruskal/Prim).", btnText: "Start" },
+            { id: 26, img: "https://picsum.photos/300/200?random=126", title: "Backtracking", label: "Algorithms", desc: "Solve N-Queens, Sudoku, Rat in a Maze.", btnText: "Start" },
+            { id: 27, img: "https://picsum.photos/300/200?random=127", title: "String Algorithms", label: "Algorithms", desc: "KMP, Rabin-Karp, Z-Algorithm.", btnText: "Start" }
+        ];
+
+        const AdvancedProgramming = [
+            { id: 28, img: "https://picsum.photos/300/200?random=128", title: "Bit Manipulation", label: "Advanced Programming", desc: "Learn XOR tricks, subsets, and power set.", btnText: "Start" },
+            { id: 29, img: "https://picsum.photos/300/200?random=129", title: "Disjoint Set Union", label: "Advanced Programming", desc: "Union-Find and Kruskal’s algorithm.", btnText: "Start" },
+            { id: 30, img: "https://picsum.photos/300/200?random=130", title: "Segment Trees", label: "Advanced Programming", desc: "Learn range queries & lazy propagation.", btnText: "Start" },
+            { id: 31, img: "https://picsum.photos/300/200?random=131", title: "Fenwick Tree", label: "Advanced Programming", desc: "Efficient prefix sum queries.", btnText: "Start" },
+            { id: 32, img: "https://picsum.photos/300/200?random=132", title: "Binary Search on Answers", label: "Advanced Programming", desc: "Optimize problems using binary search logic.", btnText: "Start" },
+            { id: 33, img: "https://picsum.photos/300/200?random=133", title: "Computational Geometry", label: "Advanced Programming", desc: "Convex hull, line intersection, etc.", btnText: "Start" },
+            { id: 34, img: "https://picsum.photos/300/200?random=134", title: "Tree DP", label: "Advanced Programming", desc: "Dynamic programming on trees.", btnText: "Start" },
+            { id: 35, img: "https://picsum.photos/300/200?random=135", title: "Game Theory", label: "Advanced Programming", desc: "Learn Nim game, Grundy numbers.", btnText: "Start" }
+        ];
+
+        Based on the syllabus title give me the questions based on the pattern have a combination of easy , medium, hard, very easy questions
+
+
+        Note : The question based on the syllabus should be based on the previous interview questions that are asked in TCS, Zoho, Wipro , Virtusa and other Tech companies get those from the internet sources
+
+- Use real-world patterns asked in TCS, Wipro, Zoho, Virtusa interviews.
+- Don't repeat the same set of question on the consequent request
+- Mix difficulties: include easy, medium, hard, very easy.
+- The question should be based on the above given syallabus
+- Very important strictly give me 30 questions which combination of the syllabus
+- Do not include any unnecessary explanation, only output the valid JSON array.
+
+Only return the array named as: const numberSystemQuestions = [...];
+`
+
+        async function fetchNumberSystemQuestions(prompt) {
+            const loadingElement = document.getElementById("loadingIndicator");
+
+            try {
+                // Show loading spinner
+                loadingElement.style.display = "block";
+
+                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer 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",
+                        "HTTP-Referer": window.location.origin,
+                        "X-Title": "Placement Coding Practice Platform"
+                    },
+                    body: JSON.stringify({
+                        model: "openai/gpt-4o-mini",
+                        messages: [
+                            { role: "user", content: prompt }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                const rawText = data.choices?.[0]?.message?.content || "No response";
+                console.log(data);
+
+                const match = rawText.match(/const numberSystemQuestions\s*=\s*(\[[\s\S]*?\]);/);
+                if (match) {
+                    const questionsArrayCode = match[1];
+                    const numberSystemQuestions = eval(questionsArrayCode);
+                    console.log("✅ Number System Questions Generated:", numberSystemQuestions);
+                    return numberSystemQuestions;
+                } else {
+                    console.warn("⚠️ Could not extract question array from response.");
+                    console.log("Full rawText:", rawText);
+                }
+            } catch (error) {
+                console.error("❌ Error fetching questions:", error);
+            } finally {
+                // Hide loading spinner
+                loadingElement.style.display = "none";
+            }
+        }
+
+
+        const letters = ['A', 'B', 'C', 'D'];
+        const quizContainer = document.getElementById("quizContainer");
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let questionDivs = [];
+
+        function renderQuiz(questions) {
+            quizContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("quiz-question");
+                if (index !== 0) {
+                    questionDiv.style.pointerEvents = "none";
+                    questionDiv.style.filter = "blur(4px)";
+                    questionDiv.style.opacity = "0.6";
+                }
+
+                const qHeader = document.createElement("h4");
+                qHeader.innerHTML = `Question ${index + 1}  Time:  <span class="timer" id="timer_${index}" style="float:right;">30s</span>`;
+                questionDiv.appendChild(qHeader);
+
+                const qText = document.createElement("div");
+                qText.classList.add("question-text");
+                qText.textContent = q.question;
+                questionDiv.appendChild(qText);
+
+                ["option1", "option2", "option3", "option4"].forEach((optKey, i) => {
+                    const label = document.createElement("label");
+
+                    const circle = document.createElement("span");
+                    circle.classList.add("option-circle");
+                    circle.textContent = letters[i];
+
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = `question_${index}`;
+                    input.value = optKey;
+
+                    label.appendChild(circle);
+                    label.appendChild(input);
+                    label.append(` ${q[optKey]}`);
+                    questionDiv.appendChild(label);
+                });
+
+                const explanationDiv = document.createElement("div");
+                explanationDiv.classList.add("explanation");
+                explanationDiv.textContent = `Explanation: ${q.explanation}`;
+                questionDiv.appendChild(explanationDiv);
+
+                questionDiv.addEventListener("change", (e) => {
+                    clearInterval(timer);
+                    const selected = e.target.value;
+                    const labels = questionDiv.querySelectorAll("label");
+                    labels.forEach(lbl => {
+                        lbl.classList.remove("option-correct", "option-incorrect");
+                    });
+
+                    if (selected === q.correct) {
+                        e.target.closest("label").classList.add("option-correct");
+                        explanationDiv.style.display = "block";
+                        explanationDiv.style.background = "#0f3d0f";
+                        explanationDiv.style.color = "#b3ffb3";
+                        score++;
+                    } else {
+                        e.target.closest("label").classList.add("option-incorrect");
+                        explanationDiv.style.display = "block";
+                        explanationDiv.style.background = "#3d0f0f";
+                        explanationDiv.style.color = "#ffb3b3";
+                        explanationDiv.textContent = `Incorrect! Correct answer: ${q[q.correct]}. ${q.explanation}`;
+                    }
+
+                    setTimeout(() => goToNextQuestion(), 500);
+                });
+
+                quizContainer.appendChild(questionDiv);
+                questionDivs.push(questionDiv);
+            });
+
+            startTimer(currentQuestionIndex);
+        }
+
+        function startTimer(index) {
+            let timeLeft = 30;
+            const timerDisplay = document.getElementById(`timer_${index}`);
+
+            timer = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    markUnansweredIncorrect(index);
+                    setTimeout(() => goToNextQuestion(), 1500);
+                }
+
+                timeLeft--;
+            }, 1000);
+        }
+
+        function markUnansweredIncorrect(index) {
+            const q = numberSystemQuestions[index];
+            const questionDiv = questionDivs[index];
+            const explanationDiv = questionDiv.querySelector(".explanation");
+            explanationDiv.style.display = "block";
+            explanationDiv.style.background = "#3d0f0f";
+            explanationDiv.style.color = "#ffb3b3";
+            explanationDiv.textContent = `Time's up! Correct answer: ${q[q.correct]}. ${q.explanation}`;
+        }
+
+        function goToNextQuestion() {
+            const current = questionDivs[currentQuestionIndex];
+            current.style.pointerEvents = "none";
+            current.style.filter = "none";
+            current.style.opacity = "1";
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= numberSystemQuestions.length) {
+                showScore();
+                return;
+            }
+
+            const next = questionDivs[currentQuestionIndex];
+            next.style.pointerEvents = "auto";
+            next.style.filter = "none";
+            next.style.opacity = "1";
+
+            startTimer(currentQuestionIndex);
+            next.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function showScore() {
+            const resultDiv = document.createElement("div");
+            resultDiv.classList.add("quiz-question");
+            resultDiv.style.background = "#1e1e2f";
+            resultDiv.innerHTML = `<div class="result"><h4>Quiz Completed</h4><p>Your Score: ${score} / ${numberSystemQuestions.length}</p><button id="proceedProgrammingBtn">Next</button></div>`;
+            quizContainer.appendChild(resultDiv);
+            resultDiv.scrollIntoView({ behavior: "smooth" });
+        }
+
+        fetchNumberSystemQuestions(prompt).then(questions => {
+            // Do something with questions
+            numberSystemQuestions = questions
+            console.log(numberSystemQuestions);
+
+            renderQuiz(numberSystemQuestions);
+        });
+
+
+        document.addEventListener("click", function (event) {
+            if (event.target && event.target.id === "proceedProgrammingBtn") {
+                console.log("Proceed button clicked!");
+                localStorage.setItem('programQuestionCount', 1);
+                location.replace("mockTestPrograms.html");
+            }
+        });
+
+
+    </script>
+
+</body>
+
+</html>

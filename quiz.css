@@ -1,0 +1,114 @@
+/* Quiz Container */
+#quizContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin: 50px auto;
+    max-width: 800px;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Each Question Card */
+.quiz-question {
+    background: #1c1b2d;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quiz-question:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Question Header */
+.quiz-question h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+/* Option List */
+.quiz-question label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #24243a;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    font-size: 0.95rem;
+    border: 2px solid transparent;
+}
+
+.quiz-question label:hover {
+    background: #2a283f;
+    border-color: #3a6ff7;
+}
+
+/* Radio Buttons */
+.quiz-question input[type="radio"] {
+    accent-color: #3a6ff7;
+    width: 18px;
+    height: 18px;
+}
+
+/* Correct / Incorrect Highlights */
+.quiz-question .option-correct {
+    background: #0f3d0f;
+    color: #b3ffb3;
+    border-color: #4ade80;
+}
+
+.quiz-question .option-incorrect {
+    background: #3d0f0f;
+    color: #ffb3b3;
+    border-color: #f87171;
+}
+
+/* Explanation Box */
+.quiz-question .explanation {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #24243a;
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: none;
+}
+
+.quiz-question .explanation.correct {
+    background: #0f3d0f;
+    color: #b3ffb3;
+}
+
+.quiz-question .explanation.incorrect {
+    background: #3d0f0f;
+    color: #ffb3b3;
+}
+
+/* Question Number */
+.quiz-question::before {
+    content: attr(data-question);
+    font-weight: 600;
+    font-size: 1rem;
+    color: #3a6ff7;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    #quizContainer {
+        margin: 20px;
+    }
+    .quiz-question {
+        padding: 20px;
+    }
+}
