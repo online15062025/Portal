@@ -184,13 +184,13 @@
       <!-- Code Editor -->
       <div id="editor"># Write your solution here
 def solve():
-    # Your code goes here
-    pass
+# Your code goes here
+  pass
 
 # Test your solution
 if __name__ == "__main__":
-    result = solve()
-    print(result)</div>
+  result = solve()
+  print(result)</div>
 
       <!-- Input/Output Panel -->
       <div class="output-panel">
@@ -228,6 +228,25 @@ if __name__ == "__main__":
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, set, get, update, remove, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBGp29E39qwUTQ3qG0bbKQOF_iAx0tM_QM",
+      authDomain: "firstapplication-308506.firebaseapp.com",
+      databaseURL: "https://firstapplication-308506-default-rtdb.firebaseio.com",
+      projectId: "firstapplication-308506",
+      storageBucket: "firstapplication-308506.appspot.com",
+      messagingSenderId: "457713519418",
+      appId: "1:457713519418:web:cc12d8a9ae9728564d5e03",
+      measurementId: "G-2KRY40HTTH"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
 
     let editor, inputEditor;
     let clearBtn = document.getElementById("clearBtn");
@@ -388,7 +407,7 @@ console.log(solve());`
     let dataString = localStorage.getItem('questionDetails');
     let storedObject = dataString ? JSON.parse(dataString) : null;
 
-    async function getQuestionFromChatGPT() {
+    async function getQuestionFromChatGPT(key) {
       if (!storedObject) return;
       const { title, type, difficulty } = storedObject;
       const overlay = document.getElementById("loadingOverlay");
@@ -417,7 +436,7 @@ console.log(solve());`
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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",
+            "Authorization": `${key}`,
             "HTTP-Referer": window.location.origin,
             "X-Title": "Placement Coding Practice Platform"
           },
@@ -464,9 +483,59 @@ console.log(solve());`
         overlay.style.display = "none";
       }
     }
-    document.getElementById("resetQuestion").addEventListener("click", getQuestionFromChatGPT);
-    document.addEventListener("DOMContentLoaded", getQuestionFromChatGPT);
 
+
+    function getAPIFromCloud() {
+      const dbref = ref(db)
+
+      get(child(dbref, 'API/')).then((snapshot) => {
+        if (snapshot.exists()) {
+          let api_key = snapshot.val().Value;
+          console.log(`The key value is ${api_key}`)
+          getQuestionFromChatGPT(api_key);
+        } else {
+          alert("Contact Admin");
+        }
+      }).catch((error) => {
+        alert("No Connection - 1");
+      });
+    }
+
+    document.getElementById("resetQuestion").addEventListener("click", getAPIFromCloud);
+    document.addEventListener("DOMContentLoaded", getAPIFromCloud);
+
+document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function(e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
 
   </script>
 </body>
