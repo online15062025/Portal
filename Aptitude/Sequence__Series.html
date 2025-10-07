@@ -1,0 +1,373 @@
+
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../dashboard.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        #quizTitle {
+            color: white;
+            font-size: 20px;
+            font-weight: lighter;
+            position: relative;
+            top: 20px;
+        }
+
+        .spinner {
+            font-size: 30px;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <title>Sequence / Series Quiz</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <div class="logo_name">Fundamentals</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-calculator'></i>
+                    <span class="links_name">Quantative Aptitude</span>
+                </a>
+                <span class="tooltip">Quantative Aptitude</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-brain'></i>
+                    <span class="links_name">Logical Reasoning</span>
+                </a>
+                <span class="tooltip">Logical Reasoning</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-chat'></i>
+                    <span class="links_name">Verbal Reasoning</span>
+                </a>
+                <span class="tooltip">Verbal Reasoning</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-code-alt'></i>
+                    <span class="links_name">Programming</span>
+                </a>
+                <span class="tooltip">Programming</span>
+            </li>
+            <li>
+                <a href="../ide.html">
+                    <i class='bx bx-terminal'></i>
+                    <span class="links_name">IDE</span>
+                </a>
+                <span class="tooltip">IDE</span>
+            </li>
+            <li>
+                <a href="../mocktest.html">
+                    <i class='bx bx-edit-alt'></i>
+                    <span class="links_name">Mocktest</span>
+                </a>
+                <span class="tooltip">Mocktest</span>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bx-star'></i>
+                    <span class="links_name">AI(Coming Soon)</span>
+                </a>
+                <span class="tooltip">AI(Coming Soon)</span>
+            </li>
+
+            <li class="profile">
+                <div class="profile-details">
+                    <i class='bx bx-export'></i>
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+
+    <section class="home-section">
+        <p id="quizTitle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sequence / Series</p>
+        <div id="quizContainer"></div>
+        <!-- Loading Spinner -->
+        <div id="loading" style="display: none; text-align: center; margin-top: 50px;">
+            <div class="spinner" style="font-size: 30px;">⏳</div>
+            <br><br>
+            <p>Fetching fresh questions... May take 20-30 seconds</p>
+        </div>
+
+    </section>
+
+    <script type="module">
+
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, set, get, update, remove, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGp29E39qwUTQ3qG0bbKQOF_iAx0tM_QM",
+            authDomain: "firstapplication-308506.firebaseapp.com",
+            databaseURL: "https://firstapplication-308506-default-rtdb.firebaseio.com",
+            projectId: "firstapplication-308506",
+            storageBucket: "firstapplication-308506.appspot.com",
+            messagingSenderId: "457713519418",
+            appId: "1:457713519418:web:cc12d8a9ae9728564d5e03",
+            measurementId: "G-2KRY40HTTH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const letters = ['A', 'B', 'C', 'D'];
+        const quizContainer = document.getElementById("quizContainer");
+
+        function renderQuiz(questions) {
+            quizContainer.innerHTML = "";
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("quiz-question");
+
+                // Question Header
+                const qHeader = document.createElement("h4");
+                qHeader.textContent = `Question ${index + 1}: (${q.difficulty})`;
+                questionDiv.appendChild(qHeader);
+
+                // Question Text
+                const qText = document.createElement("div");
+                qText.classList.add("question-text");
+                qText.textContent = q.question;
+                questionDiv.appendChild(qText);
+
+                // Options
+                ["option1", "option2", "option3", "option4"].forEach((optKey, i) => {
+                    const label = document.createElement("label");
+
+                    const circle = document.createElement("span");
+                    circle.classList.add("option-circle");
+                    circle.textContent = letters[i];
+
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = `question_${index}`;
+                    input.value = optKey;
+
+                    label.appendChild(circle);
+                    label.appendChild(input);
+                    label.append(` ${q[optKey]}`);
+                    questionDiv.appendChild(label);
+                });
+
+                // Explanation
+                const explanationDiv = document.createElement("div");
+                explanationDiv.classList.add("explanation");
+                explanationDiv.textContent = `Explanation: ${q.explanation}`;
+                questionDiv.appendChild(explanationDiv);
+
+                questionDiv.addEventListener("change", (e) => {
+                    const selected = e.target.value;
+                    const labels = questionDiv.querySelectorAll("label");
+
+                    labels.forEach(lbl => {
+                        lbl.classList.remove("option-correct", "option-incorrect");
+                    });
+
+                    if (selected === q.correct) {
+                        e.target.closest("label").classList.add("option-correct");
+                        explanationDiv.style.display = "block";
+                        explanationDiv.style.background = "#0f3d0f";
+                        explanationDiv.style.color = "#b3ffb3";
+                    } else {
+                        e.target.closest("label").classList.add("option-incorrect");
+                        explanationDiv.style.display = "block";
+                        explanationDiv.style.background = "#3d0f0f";
+                        explanationDiv.style.color = "#ffb3b3";
+                        explanationDiv.textContent = `Incorrect! Correct answer: ${q[q.correct]}. ${q.explanation}`;
+                    }
+                });
+
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+
+
+        let sidebar = document.querySelector(".sidebar");
+        let closeBtn = document.querySelector("#btn");
+        let searchBtn = document.querySelector(".bx-search");
+
+        closeBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();
+        });
+
+
+        function menuBtnChange() {
+            if (sidebar.classList.contains("open")) {
+                closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+            } else {
+                closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+        }
+
+        async function fetchQuestions(subject, title, key) {
+            console.log(`The key is ${key}`)
+            const loading = document.getElementById("loading");
+            const quizContainer = document.getElementById("quizContainer");
+
+            quizContainer.innerHTML = ""; // Clear old content
+            loading.style.display = "block"; // Show loading spinner
+
+            const prompt = `Generate 50 unique aptitude questions in ${subject} for the topic "${title}".
+Each question should:
+- Not repeat previously shown questions.
+- Be balanced in difficulty (Easy, Medium, Hard).
+- Include exactly four options (option1 to option4).
+- Include the correct option (e.g., "option2").
+- Provide a clear, concise explanation for the answer.
+- Provide stricyly 50 question don't leave question please make it very important
+
+Return the questions in a JSON array format with each object having:
+{
+  "question": "...",
+  "option1": "...",
+  "option2": "...",
+  "option3": "...",
+  "option4": "...",
+  "difficulty": "Easy" | "Medium" | "Hard",
+  "correct": "optionX",
+  "explanation": "..."
+}`;
+
+            try {
+                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `${key}`,
+                        "HTTP-Referer": window.location.origin,
+                        "X-Title": "Placement Coding Practice Platform"
+                    },
+                    body: JSON.stringify({
+                        model: "openai/gpt-4o-mini",
+                        messages: [{ role: "user", content: prompt }]
+                    })
+                });
+
+                const data = await response.json();
+                const message = data.choices[0].message.content;
+                console.log(message)
+                let questions;
+                try {
+                    // Extract JSON block from markdown code block
+                    const jsonMatch = message.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+                    if (!jsonMatch || jsonMatch.length < 2) {
+                        throw new Error("No JSON code block found in response.");
+                    }
+
+                    const jsonString = jsonMatch[1];
+                    questions = JSON.parse(jsonString);
+                } catch (err) {
+                    console.error("JSON parsing failed:", err);
+                    quizContainer.innerHTML = "<p style='color: red;'>Error parsing response. Please try again.</p>";
+                    return;
+                }
+
+                console.log(questions)
+                renderQuiz(questions);
+            } catch (error) {
+                console.error("Failed to fetch questions:", error);
+                quizContainer.innerHTML = "<p style='color: red;'>Failed to load questions. Please try again later.</p>";
+            } finally {
+                loading.style.display = "none";
+            }
+        }
+
+        let topicTitle = "Sequence / Series";
+        let subject = "Verbal Reasoning"
+
+        function getAPIFromCloud() {
+            const dbref = ref(db)
+
+            get(child(dbref, 'API/')).then((snapshot) => {
+                if (snapshot.exists()) {
+                    let api_key = snapshot.val().Value;
+                    console.log(`The index value is ${api_key}`)
+                    fetchQuestions(subject, topicTitle, api_key);
+                } else {
+                    alert("Contact Admin");
+                }
+            }).catch((error) => {
+                alert("No Connection - 1");
+            });
+        }
+
+        getAPIFromCloud()
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function(e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
+    </script>
+</body>
+
+</html>
+    

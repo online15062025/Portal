@@ -1,0 +1,496 @@
+
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../dashboard.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Greedy Algorithms List</title>
+    <style>
+
+        #sortingList li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c1b2d;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-style: solid;
+            border-color: #636262;
+            border-width: 0.10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #sort {
+            position: relative;
+            right: -10%;
+        }
+
+        .solve-btn {
+            background: transparent;
+            color: green;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            border-color: green;
+            border-style: solid;
+            border-width: 0.15px;
+            transition: all 0.2s ease;
+        }
+
+        .solve-btn:hover {
+            background: green;
+            color: white;
+        }
+
+        /* 1. Basic Reset and Sizing */
+        select {
+            /* Set a consistent font and size */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: white;
+            /* Standard padding and border */
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            /* Slightly rounded corners */
+            width: 250px;
+            /* Adjust width as needed */
+
+            /* Use system defaults for background and cursor */
+            background-color: #1c1b2d;
+            cursor: pointer;
+
+            /* Smooth transitions for hover effects */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* 2. Remove Default Browser Styling (Crucial for Customization) */
+        select {
+            /* Remove OS-specific default styling */
+            -webkit-appearance: none;
+            /* Chrome, Safari, Edge */
+            -moz-appearance: none;
+            /* Firefox */
+            appearance: none;
+            /* Standard property */
+        }
+
+
+        /* 4. Focus and Hover Effects */
+        select:hover {
+            border-color: #999;
+        }
+
+        select:focus {
+            /* Highlight the element when focused */
+            border-color: white;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+            /* Remove default focus outline */
+        }
+
+        /* 5. Disabled State */
+        select:disabled {
+            background-color: #f5f5f5;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        #loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            font-size: 16px;
+            margin-top: 13%;
+        }
+
+        .spinner img {
+            width: 55px;
+            height: 25px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <div class="logo_name">Fundamentals</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-calculator'></i>
+                    <span class="links_name">Quantative Aptitude</span>
+                </a>
+                <span class="tooltip">Quantative Aptitude</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-brain'></i>
+                    <span class="links_name">Logical Reasoning</span>
+                </a>
+                <span class="tooltip">Logical Reasoning</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-chat'></i>
+                    <span class="links_name">Verbal Reasoning</span>
+                </a>
+                <span class="tooltip">Verbal Reasoning</span>
+            </li>
+
+            <li>
+                <a href="../dashboard.html">
+                    <i class='bx bx-code-alt'></i>
+                    <span class="links_name">Programming</span>
+                </a>
+                <span class="tooltip">Programming</span>
+            </li>
+            <li>
+                <a href="../ide.html">
+                    <i class='bx bx-terminal'></i>
+                    <span class="links_name">IDE</span>
+                </a>
+                <span class="tooltip">IDE</span>
+            </li>
+            <li>
+                <a href="../mocktest.html">
+                    <i class='bx bx-edit-alt'></i>
+                    <span class="links_name">Mocktest</span>
+                </a>
+                <span class="tooltip">Mocktest</span>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bx-star'></i>
+                    <span class="links_name">AI(Coming Soon)</span>
+                </a>
+                <span class="tooltip">AI(Coming Soon)</span>
+            </li>
+
+            <li class="profile">
+                <div class="profile-details">
+                    <i class='bx bx-export'></i>
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+
+    <section class="home-section">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search cards...">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M21.71 20.29l-3.388-3.388A8.935 8.935 0 0019 11a9 9 0 10-9 9c2.12 0 4.07-.74 5.902-1.678l3.388 3.388a1 1 0 001.42-1.42zM11 17a6 6 0 110-12 6 6 0 010 12z" />
+                </svg>
+            </div>
+            <select id="sort"></select>
+        </div>
+        <div>
+            <ul id="sortingList"></ul>
+        </div>
+        <div id="loader" style="display: none;">
+            <div class="spinner"><img src="../gif/loading_racoon.gif" alt="Loading"></div>
+            <br>
+            <p>Loading topics, please wait...</p>
+        </div>
+    </section>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, set, get, update, remove, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGp29E39qwUTQ3qG0bbKQOF_iAx0tM_QM",
+            authDomain: "firstapplication-308506.firebaseapp.com",
+            databaseURL: "https://firstapplication-308506-default-rtdb.firebaseio.com",
+            projectId: "firstapplication-308506",
+            storageBucket: "firstapplication-308506.appspot.com",
+            messagingSenderId: "457713519418",
+            appId: "1:457713519418:web:cc12d8a9ae9728564d5e03",
+            measurementId: "G-2KRY40HTTH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        let sortingQuestions = []; // Will be populated from OpenRouter
+        const sortingList = document.getElementById("sortingList");
+        const sortSelect = document.getElementById("sort");
+        const searchInput = document.getElementById("searchInput");
+
+        // Fetch from OpenRouter API
+        async function fetchQuestionsFromOpenRouter(title, key) {
+            const prompt = `
+Generate a JSON array of at least 30 programming coding topics title for the title : "${title}". 
+Each question must follow this structure:
+{
+  "title": "Descriptive question title",
+  "type": "Algorithm or technique name",
+  "difficulty": "Easy" | "Medium" | "Hard",
+  "percentage": "Number%"  // A rough interview frequency percentage (5% to 30%)
+}
+Requirements:
+- Ensure a mix of Easy, Medium, and Hard difficulty levels.
+- Avoid explanations or any text outside the JSON.
+- Return only the raw JSON array, no code block or markdown formatting.
+- Don't need question answer type titles, it should be like "implement this algorithm ", "Solve the problem using" 
+`;
+
+            try {
+                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `${key}`,
+                        "HTTP-Referer": window.location.origin,
+                        "X-Title": "Placement Coding Practice Platform"
+                    },
+                    body: JSON.stringify({
+                        model: "openai/gpt-4o-mini",
+                        messages: [{ role: "user", content: prompt }]
+                    })
+                });
+
+                const data = await response.json();
+                const content = data.choices?.[0]?.message?.content || "";
+                const cleanedContent = content.trim().replace(/```json|```/g, "").trim();
+                const questions = JSON.parse(cleanedContent);
+                return questions;
+            } catch (error) {
+                console.error("Error fetching questions:", error);
+                return [];
+            }
+        }
+
+        // Render the list
+        function renderQuestionsList(questionsArray) {
+            sortingList.innerHTML = "";
+
+            questionsArray.forEach((q, index) => {
+                const li = document.createElement("li");
+
+                li.setAttribute("data-id", index);
+                li.setAttribute("data-title", q.title);
+                li.setAttribute("data-type", q.type);
+                li.setAttribute("data-difficulty", q.difficulty);
+                li.setAttribute("data-percentage", q.percentage);
+
+                const leftDiv = document.createElement("div");
+                const title = document.createElement("div");
+                title.classList.add("question-title");
+                title.textContent = q.title;
+
+                const meta = document.createElement("div");
+                meta.classList.add("question-meta");
+
+                let spanColor = "default";
+                if (q.difficulty.toLowerCase() === "easy") spanColor = "green";
+                else if (q.difficulty.toLowerCase() === "medium") spanColor = "#bab00b";
+                else if (q.difficulty.toLowerCase() === "hard") spanColor = "red";
+
+                meta.innerHTML = `
+                <span>${q.type}</span>
+                <span style="background-color:${spanColor}; color:white;">Difficulty:${q.difficulty}</span>
+                <span>Interview Probability: <span style="font-weight: bold; color: green;">${q.percentage}</span></span>
+            `;
+
+                leftDiv.appendChild(title);
+                leftDiv.appendChild(meta);
+
+                const solveBtn = document.createElement("button");
+                solveBtn.classList.add("solve-btn");
+                solveBtn.textContent = "Solve";
+
+                // Button click - prevent list click
+                solveBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const dataToSave = {
+                        id: index,
+                        title: q.title,
+                        type: q.type,
+                        difficulty: q.difficulty,
+                        percentage: q.percentage
+                    };
+                    localStorage.setItem('questionDetails', JSON.stringify(dataToSave));
+                    console.log("Saved to localStorage:", dataToSave);
+                    window.location.href = "programmingEditor.html"
+                });
+
+                li.addEventListener("click", () => {
+                    const dataToSave = {
+                        id: index,
+                        title: q.title,
+                        type: q.type,
+                        difficulty: q.difficulty,
+                        percentage: q.percentage
+                    };
+                    localStorage.setItem('questionDetails', JSON.stringify(dataToSave));
+                    console.log("List Item Clicked and Saved:", dataToSave);
+                    window.location.href = "programmingEditor.html"
+                });
+
+                li.appendChild(leftDiv);
+                li.appendChild(solveBtn);
+                sortingList.appendChild(li);
+            });
+        }
+
+        // Apply filter and search together
+        function applyFilters() {
+            const selectedDiff = sortSelect.value;
+            const searchVal = searchInput.value.toLowerCase();
+
+            const filtered = sortingQuestions.filter(q => {
+                const matchesDiff = selectedDiff === "All" || q.difficulty === selectedDiff;
+                const matchesSearch =
+                    q.title.toLowerCase().includes(searchVal) ||
+                    q.type.toLowerCase().includes(searchVal) ||
+                    q.difficulty.toLowerCase().includes(searchVal);
+
+                return matchesDiff && matchesSearch;
+            });
+
+            renderQuestionsList(filtered);
+        }
+
+        // Event listeners
+        sortSelect.addEventListener("change", applyFilters);
+        searchInput.addEventListener("input", applyFilters);
+
+        // Sidebar toggle
+        const sidebar = document.querySelector(".sidebar");
+        const closeBtn = document.querySelector("#btn");
+        const searchBtn = document.querySelector(".bx-search");
+
+        closeBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();
+        });
+
+        function menuBtnChange() {
+            if (sidebar.classList.contains("open")) {
+                closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+            } else {
+                closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+        }
+
+        async function getAPIFromCloud(title) {
+            try {
+                const dbref = ref(db);
+                const snapshot = await get(child(dbref, 'API/'));
+
+                if (snapshot.exists()) {
+                    let api_key = snapshot.val().Value;
+                    console.log(`The index value is ${api_key}`);
+                    let ret = await fetchQuestionsFromOpenRouter(title, api_key);
+                    return ret;
+                } else {
+                    alert("Contact Admin");
+                    return null;
+                }
+            } catch (error) {
+                alert("No Connection - 1");
+                console.error(error);
+                return null;
+            }
+        }
+
+        const loader = document.getElementById("loader");
+
+        (async function init() {
+            loader.style.display = "flex"; // Show loader
+
+            sortingQuestions = await getAPIFromCloud("Greedy Algorithms");
+
+            // Populate dropdown
+            const difficulties = [...new Set(sortingQuestions.map(q => q.difficulty))];
+            sortSelect.innerHTML = "";
+            sortSelect.appendChild(new Option("All", "All"));
+            difficulties.forEach(diff => {
+                const opt = document.createElement("option");
+                opt.value = diff;
+                opt.textContent = diff;
+                sortSelect.appendChild(opt);
+            });
+
+            loader.style.display = "none"; // Hide loader after data is ready
+            renderQuestionsList(sortingQuestions);
+        })();
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function (e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function (e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function (e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
+    </script>
+
+</body>
+
+</html>
+    
