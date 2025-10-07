@@ -212,6 +212,25 @@
     </div>
     <script type="module">
 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, set, get, update, remove, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGp29E39qwUTQ3qG0bbKQOF_iAx0tM_QM",
+            authDomain: "firstapplication-308506.firebaseapp.com",
+            databaseURL: "https://firstapplication-308506-default-rtdb.firebaseio.com",
+            projectId: "firstapplication-308506",
+            storageBucket: "firstapplication-308506.appspot.com",
+            messagingSenderId: "457713519418",
+            appId: "1:457713519418:web:cc12d8a9ae9728564d5e03",
+            measurementId: "G-2KRY40HTTH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
         let numberSystemQuestions;
 
         const prompt = `
@@ -383,7 +402,7 @@ const Quizquestions = [
 Only return the array named as: const numberSystemQuestions = [...];
 `
 
-        async function fetchNumberSystemQuestions(prompt) {
+        async function fetchNumberSystemQuestions(prompt, key) {
             const loadingElement = document.getElementById("loadingIndicator");
 
             try {
@@ -394,7 +413,7 @@ Only return the array named as: const numberSystemQuestions = [...];
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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",
+                        "Authorization": `${key}`,
                         "HTTP-Referer": window.location.origin,
                         "X-Title": "Placement Coding Practice Platform"
                     },
@@ -413,9 +432,12 @@ Only return the array named as: const numberSystemQuestions = [...];
                 const match = rawText.match(/const numberSystemQuestions\s*=\s*(\[[\s\S]*?\]);/);
                 if (match) {
                     const questionsArrayCode = match[1];
-                    const numberSystemQuestions = eval(questionsArrayCode);
+                    numberSystemQuestions = eval(questionsArrayCode);
                     console.log("✅ Number System Questions Generated:", numberSystemQuestions);
-                    return numberSystemQuestions;
+                                
+            console.log(numberSystemQuestions);
+
+            renderQuiz(numberSystemQuestions);
                 } else {
                     console.warn("⚠️ Could not extract question array from response.");
                     console.log("Full rawText:", rawText);
@@ -573,13 +595,25 @@ Only return the array named as: const numberSystemQuestions = [...];
             resultDiv.scrollIntoView({ behavior: "smooth" });
         }
 
-        fetchNumberSystemQuestions(prompt).then(questions => {
-            // Do something with questions
-            numberSystemQuestions = questions
-            console.log(numberSystemQuestions);
 
-            renderQuiz(numberSystemQuestions);
-        });
+        function getAPIFromCloud() {
+            const dbref = ref(db)
+
+            get(child(dbref, 'API/')).then((snapshot) => {
+                if (snapshot.exists()) {
+                    let api_key = snapshot.val().Value;
+                    console.log(`The index value is ${api_key}`)
+                    fetchNumberSystemQuestions(prompt, api_key);
+                } else {
+                    alert("Contact Admin");
+                }
+            }).catch((error) => {
+                alert("No Connection - 1");
+            });
+        }
+
+getAPIFromCloud()
+        
 
 
         document.addEventListener("click", function (event) {
@@ -590,6 +624,40 @@ Only return the array named as: const numberSystemQuestions = [...];
             }
         });
 
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function(e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
+
+        
 
     </script>
 
