@@ -131,45 +131,46 @@
         }
 
         /* Final Score Modal Styling */
-#finalScoreModal .modal-content {
-    background-color: #1e1e1e; /* Dark background */
-    color: #f8f9fa; /* Light text for contrast */
-    border: 1px solid #343a40;
-    border-radius: 10px;
-}
+        #finalScoreModal .modal-content {
+            background-color: #1e1e1e;
+            /* Dark background */
+            color: #f8f9fa;
+            /* Light text for contrast */
+            border: 1px solid #343a40;
+            border-radius: 10px;
+        }
 
-#finalScoreModal .modal-header {
-    border-bottom: 1px solid #444;
-}
+        #finalScoreModal .modal-header {
+            border-bottom: 1px solid #444;
+        }
 
-#finalScoreModal .modal-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
+        #finalScoreModal .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
 
-#finalScoreModal .modal-body p {
-    font-size: 1.2rem;
-    margin-bottom: 0;
-    line-height: 1.5;
-}
+        #finalScoreModal .modal-body p {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
 
-#finalScoreModal .modal-footer {
-    border-top: none;
-}
+        #finalScoreModal .modal-footer {
+            border-top: none;
+        }
 
-#goToDashboardBtn {
-    background-color: #0d6efd;
-    border: none;
-    padding: 8px 20px;
-    font-size: 1rem;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
+        #goToDashboardBtn {
+            background-color: #0d6efd;
+            border: none;
+            padding: 8px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
 
-#goToDashboardBtn:hover {
-    background-color: #0b5ed7;
-}
-
+        #goToDashboardBtn:hover {
+            background-color: #0b5ed7;
+        }
     </style>
 </head>
 
@@ -225,14 +226,14 @@
 
             <!-- Code Editor -->
             <div id="editor"># Write your solution here
-def solve():
-    # Your code goes here
-    pass
+                def solve():
+                # Your code goes here
+                pass
 
-# Test your solution
-if __name__ == "__main__":
-    result = solve()
-    print(result)</div>
+                # Test your solution
+                if __name__ == "__main__":
+                result = solve()
+                print(result)</div>
 
             <!-- Input/Output Panel -->
             <div class="output-panel">
@@ -292,6 +293,26 @@ if __name__ == "__main__":
 
 
     <script type="module">
+
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, set, get, update, remove, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGp29E39qwUTQ3qG0bbKQOF_iAx0tM_QM",
+            authDomain: "firstapplication-308506.firebaseapp.com",
+            databaseURL: "https://firstapplication-308506-default-rtdb.firebaseio.com",
+            projectId: "firstapplication-308506",
+            storageBucket: "firstapplication-308506.appspot.com",
+            messagingSenderId: "457713519418",
+            appId: "1:457713519418:web:cc12d8a9ae9728564d5e03",
+            measurementId: "G-2KRY40HTTH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
         let editor, inputEditor;
         let clearBtn = document.getElementById("clearBtn");
         let languageSelect = document.getElementById("languageSelect");
@@ -486,7 +507,7 @@ console.log(solve());`
 
         submitBtn.addEventListener("click", submitCode);
 
-        async function getQuestionFromChatGPT(title, type, difficulty) {
+        async function getQuestionFromChatGPT(title, type, difficulty, key) {
             const overlay = document.getElementById("loadingOverlay");
             const content = document.getElementById("problemContent");
             overlay.style.display = "flex";
@@ -513,7 +534,7 @@ Please include:
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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",
+                        "Authorization": `${key}`,
                         "HTTP-Referer": window.location.origin,
                         "X-Title": "Placement Coding Practice Platform"
                     },
@@ -557,11 +578,28 @@ Please include:
 
         let questionCount = parseInt(localStorage.getItem("programQuestionCount") || 1);
 
+
+        function getAPIFromCloud(title, subject, difficulty) {
+            const dbref = ref(db)
+
+            get(child(dbref, 'API/')).then((snapshot) => {
+                if (snapshot.exists()) {
+                    let api_key = snapshot.val().Value;
+                    console.log(`The index value is ${api_key}`)
+                    getQuestionFromChatGPT(title, subject, difficulty, api_key);
+                } else {
+                    alert("Contact Admin");
+                }
+            }).catch((error) => {
+                alert("No Connection - 1");
+            });
+        }
+
         if (questionCount === 1 || questionCount === 2) {
             const topics = ["linked list", "array", "stack", "queue"];
             const title = topics[Math.floor(Math.random() * topics.length)];
             const difficulty = questionCount === 1 ? "easy" : "medium";
-            getQuestionFromChatGPT(title, title, difficulty);
+            getAPIFromCloud(title, title, difficulty);
         }
 
         if (questionCount === 3 || questionCount === 0) {
@@ -570,9 +608,7 @@ Please include:
         }
 
         document.getElementById("resetQuestion").addEventListener("click", () => {
-            const topics = ["linked list", "array", "stack", "queue"];
-            const title = topics[Math.floor(Math.random() * topics.length)];
-            getQuestionFromChatGPT(title, title, "easy");
+            alert("Not allowed in Mock test")
         });
 
         let timerInterval;
@@ -602,6 +638,39 @@ Please include:
                 }
             }, 1000);
         }
+
+document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function(e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
 
     </script>
 
