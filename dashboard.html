@@ -667,6 +667,40 @@
             alert("AI feature is on production")
         });
 
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable specific key combinations
+        document.addEventListener('keydown', function(e) {
+            // Prevent F12, Ctrl+Shift+I/J/C/U, Ctrl+S, Ctrl+U, Ctrl+P, Ctrl+Shift+C, Ctrl+Shift+J
+            if (
+                e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+                (e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 80)) // Ctrl+S/U/P
+            ) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable page print
+        window.addEventListener("beforeprint", function(e) {
+            alert("Printing is disabled on this webpage.");
+            e.preventDefault();
+        });
+
+        // Try to block dragging (saving images etc.)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Additional — block copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            alert('Copying is disabled on this page.');
+        });
+
     </script>
 </body>
 
